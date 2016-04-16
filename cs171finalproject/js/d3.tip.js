@@ -40,7 +40,7 @@ d3.tip = function() {
     while(i--) nodel.classed(directions[i], false)
     coords = direction_callbacks.get(dir).apply(this)
     nodel.classed(dir, true).style({
-      top: (coords.top +  poffset[0]) + 'px',
+      //top: (coords.top +  poffset[0]) + 'px',
       left: (coords.left + poffset[1]) + 'px'
     })
 
@@ -52,9 +52,9 @@ d3.tip = function() {
   // Returns a tip
   tip.hide = function() {
     nodel = d3.select(node)
-    nodel.style({ opacity: 0, 'pointer-events': 'none' })
+    nodel.style({ opacity: 0, 'pointer-events': 'none' });
     return tip
-  }
+  };
 
   // Public: Proxy attr calls to the d3 tip container.  Sets or gets attribute value.
   //
