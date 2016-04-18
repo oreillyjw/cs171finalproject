@@ -8,8 +8,8 @@ body {
 #map {
     background: #f3f3f3;
   border:2px solid #000;
-  width:962px;
-  height:552px;
+  max-width:962px;
+  max-height:552px;
 }
 
 .country {
@@ -104,7 +104,7 @@ text.linetype.longActive{
 
 
 #legend {
-    padding: 1.5em 0 0 1.5em;
+    padding: 0.5em 0 0 1.5em;
 }
 
 li.key {
@@ -125,7 +125,45 @@ li.key {
     margin-left: 10px;
     padding-bottom: 10px;
 }
-/*********************/
+
+.text {
+    transform: rotate(45deg);
+    margin-top: 29px;
+    margin-left: -12px;
+}
+
+.navbar-default .navbar-nav>li>a{
+    font-size: 16px;
+    cursor: pointer;
+}
+.navbar-default .navbar-nav>li>a:hover{
+    color: #555;
+    background-color: #e7e7e7;
+}
+@media (min-width: 1350px){
+    .container {
+        width: 1300px;
+    }
+}
+
+body{
+    min-width: 638px;
+}
+.btn.btn-default.filters{
+    padding: 10px 12px;
+}
+
+.daly-year, .daly-type{
+    font-size:14px;
+}
+
+.typeText{
+    font-size: 14px;
+    margin-top: 2px;
+}
+
+
+    /*********************/
 /*  TOOLTIP OVERLAY  */
 /*********************/
 

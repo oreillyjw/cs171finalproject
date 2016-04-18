@@ -1,4 +1,6 @@
-
+/*
+ http://www.htmlgoodies.com/beyond/javascript/article.php/3471341
+ */
 var choroplethMap,
     lineGraph,
     worldData,
@@ -9,17 +11,21 @@ var choroplethMap,
         all : 'All Causes',
         communicable : 'Communicable & other Group I',
         injuries : 'Injuries',
-        noncommunicable: 'Noncommunicable diseases'
-    },
+        noncommunicable: 'Noncommunicable diseases',
+
+        'Noncommunicable diseases':'noncommunicable',
+        'Injuries' :  'injuries',
+        'Communicable & other Group I': 'communicable',
+        'All Causes': 'all'
+},
     color = d3.scale.category10(),
     formatDate = d3.time.format("%Y"),
     formatNumber = d3.format("0,000"),
     formatNumberWhole = d3.format(".0f");
 
+$("#infoModal").modal('show');
 
 loadData();
-
-$("#myModal").modal('show');
 
 function loadData(){
     queue()
@@ -60,36 +66,60 @@ function createVis(){
     lineGraph = new LineGraph("subGraph-line", worldData, worldNames, dalys, dalysHash);
 }
 
+$(".daly-year").html("<b>Year</b>: " + $("#dalys-year-radio > a.active").text());
+$(".daly-type").html("<b>DALY Type</b>: " + dalysMappingTitles[$("input:radio[name='dalysType']:checked").val()]);
 
-
-$('#dalys-info').on('change', function(){
-    choroplethMap.year = '2012';
-    choroplethMap.type = $(this).val();
-    choroplethMap.wrangleData();
-    $('.linetype').remove();
-
-    lineGraph.country =lineGraph.country;
-    lineGraph.updateVis();
+$("input[name='dalysType']").on('click', function(){
+    if( choroplethMap.type !== $(this).val()){
+        choroplethMap.type = $(this).val();
+        choroplethMap.wrangleData();
+        $(".daly-type").html("<b>DALY Type</b>: " + dalysMappingTitles[$("input:radio[name='dalysType']:checked").val()]);
+    }
 });
 
+$("#dalys-year-radio > a ").on('click', function(){
+    console.log("click");
+    console.log($(this).text());
+    if( choroplethMap.year !== $(this).text()) {
+        choroplethMap.year = $(this).text();
+        choroplethMap.wrangleData();
+        $(".daly-year").html("<b>Year</b>: " + $(this).text());
+    }
+});
 
 /*
 Slideshow controls
  */
 
 $('.modal-footer > .btn').on('click', function(){
-    var numberOfSlider = 2;
+    var numberOfSlides = 3;
     console.log($('.modal-body.active').attr('class'));
     var array = $('.modal-body.active').attr('class').split("-");
+    var currentNum = parseInt(array[array.length -1]);
     /*
     Parse slide number
-     http://www.htmlgoodies.com/beyond/javascript/article.php/3471341
      */
     //var slideNum -
     if ($(this).hasClass("btn-prev")){
-        console.log();
+        currentNum=currentNum-1;
+        if( currentNum === 0){
+            currentNum = numberOfSlides;
+        }
+        $('.modal-body.active').hide().removeClass('active');
+        $('.modal-body.modal-'+ currentNum).show().addClass('active');
 
     }else{
-        console.log($('.modal-body.active'));
+        currentNum=currentNum+1;
+        if( currentNum === numberOfSlides + 1){
+            currentNum = 1;
+        }
+        $('.modal-body.active').removeClass('active').hide();
+        $('.modal-body.modal-'+ currentNum).addClass('active').show();
     }
 });
+
+$('.reset-button > .btn.btn-danger').on('click', function(){
+    choroplethMap.reset()
+});
+
+

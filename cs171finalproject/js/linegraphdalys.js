@@ -21,8 +21,8 @@ LineGraph.prototype.initVis = function() {
     var vis = this;
 
     vis.margin = {top: 60, right: 40, bottom: 60, left: 60};
-    vis.width = 300;
-    vis.height = 300;
+    vis.width = 250;
+    vis.height = 250;
     vis.type = 'all';
     vis.allDalysDisplay = [ 'All Causes', 'Communicable & other Group I', 'Injuries', 'Noncommunicable diseases'];
 
@@ -135,7 +135,7 @@ LineGraph.prototype.updateVis = function() {
         .duration(800)
         .call(yBarAxis)
         .selectAll("text.y-axis.axis-title")
-        .text("DALYs*")
+        .text("DALYs¹")
         .style("font-size", "12px");
 
     vis.dataPoints = [];
@@ -161,13 +161,13 @@ LineGraph.prototype.updateVis = function() {
         .attr("data-legend-color",function(d) { return color(d.dalyType);})
         .style("stroke", function(d) { return color(d.dalyType); })
         .attr("class", function(d) {
-            return "linetype " + d.dalyType.replace(/[&\s]/g,"-");
+            return "linetype " + dalysMappingTitles[d.dalyType];
         })
         .on('mouseover', function(d){
-            $("." + d.dalyType.replace(/[&\s]/g,"-")).attr("class", "linetype active "+ d.dalyType.replace(/[&\s]/g,"-"));
+            $("." + dalysMappingTitles[d.dalyType]).attr("class", "linetype active "+ dalysMappingTitles[d.dalyType]);
         })
         .on('mouseout', function(d){
-            $("." + d.dalyType.replace(/[&\s]/g,"-")).attr("class", "linetype "+ d.dalyType.replace(/[&\s]/g,"-"));
+            $("." + dalysMappingTitles[d.dalyType] ).attr("class", "linetype "+ dalysMappingTitles[d.dalyType]);
         });
 
     vis.drawLegend();
@@ -198,15 +198,15 @@ LineGraph.prototype.drawCircles = function() {
         })
         .attr("r", 8)
         .attr("class", function(d) {
-            return "linetype " + d.dalyType.replace(/[&\s]/g,"-");
+            return "linetype " + dalysMappingTitles[d.dalyType];
         });
 
     circles
         .on('mouseover', function(d){
-            $("." + d.dalyType.replace(/[&\s]/g,"-")).attr("class", "linetype active "+ d.dalyType.replace(/[&\s]/g,"-"));
+            $("." + dalysMappingTitles[d.dalyType]).attr("class", "linetype active "+ dalysMappingTitles[d.dalyType]);
         })
         .on('mouseout', function(d){
-            $("." + d.dalyType.replace(/[&\s]/g,"-")).attr("class", "linetype "+ d.dalyType.replace(/[&\s]/g,"-"));
+            $("." + dalysMappingTitles[d.dalyType]).attr("class", "linetype "+ dalysMappingTitles[d.dalyType]);
         });
     circles.exit().remove();
 };

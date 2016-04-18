@@ -34,13 +34,13 @@
                 .attr("x","1em")
                 .text(function(d) {return d.key})
                 .attr("class", function(d){
-                    return "linetype " + d.key.replace(/[&\s]/g,"-");
+                    return "linetype " + dalysMappingTitles[d.key];
                 })
                 .on('mouseover', function(d){
-                    $("." + d.key.replace(/[&\s]/g,"-")).attr("class", "linetype active "+ d.key.replace(/[&\s]/g,"-"));
+                    $("." + dalysMappingTitles[d.key]).attr("class", "linetype active "+ dalysMappingTitles[d.key]);
                 })
                 .on('mouseout', function(d){
-                    $("." + d.key.replace(/[&\s]/g,"-")).attr("class", "linetype "+ d.key.replace(/[&\s]/g,"-"));
+                    $("." + dalysMappingTitles[d.key]).attr("class", "linetype "+ dalysMappingTitles[d.key]);
                 });;
 
             li.selectAll("circle")
@@ -52,13 +52,13 @@
                 .attr("r","0.4em")
                 .style("fill",function(d) {return d.value.color})
                 .attr("class", function(d){
-                    return "linetype " + d.key.replace(/[&\s]/g,"-");
+                    return "linetype " + dalysMappingTitles[d.key];
                 })
                 .on('mouseover', function(d){
-                    $("." + d.key.replace(/[&\s]/g,"-")).attr("class", "linetype active "+ d.key.replace(/[&\s]/g,"-"));
+                    $("." + dalysMappingTitles[d.key]).attr("class", "linetype active "+ dalysMappingTitles[d.key]);
                 })
                 .on('mouseout', function(d){
-                    $("." + d.key.replace(/[&\s]/g,"-")).attr("class", "linetype "+ d.key.replace(/[&\s]/g,"-"));
+                    $("." + dalysMappingTitles[d.key]).attr("class", "linetype "+ dalysMappingTitles[d.key]);
                 });
 
             // Reposition and resize the box

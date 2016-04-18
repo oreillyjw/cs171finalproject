@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
 	<meta charset="utf-8">
 	<meta name="description" content="">
@@ -12,40 +12,90 @@
 	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<!-- Fixed navbar -->
+<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#">Disability-Adjusted Life Year (DALY)</a>
+		</div>
+		<div id="navbar" class="navbar-collapse collapse">
+			<ul class="nav navbar-nav navbar-right">
+				<li>
+					<a type="button" data-toggle="modal" data-target="#infoModal">About DALYs</a>
+				</li>
+			</ul>
+		</div><!--/.nav-collapse -->
+	</div>
+</nav>
+<br/><br/><br/>
 
-<br><br>
-	<select id="dalys-info" class="form-control">
-		<option value="all">All Causes</option>
-		<option value="communicable">Communicable & other Group I</option>
-		<option value="injuries">Injuries</option>
-		<option value="noncommunicable">Noncommunicable diseases</option>
-	</select>
-
-	<div id="map"></div>
-<div class="reset-button">
-	<button type="button" class="btn btn-danger">Reset</button>
+<!-- Main Container -->
+<div class="container">
+	<div class="row">
+		<div class="col-lg-2 col-md-2 col-xs-2" style="padding-right: 0;">
+			<button type="button" class="btn btn-default filters" data-toggle="modal" data-target="#filterModal">Filters</button>
+			<div style="display: inline; float: right; font-size: 14px; margin-top: 15px;">Applied Filters:</div>
+		</div>
+		<div class="col-lg-10 col-md-10 col-xs-10" style="padding-left: 0;">
+			<div class="col-lg-6 col-md-6 col-xs-6">
+				<div class=" panel panel-default applied-filters">
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-lg-3"><div class="daly-year"></div></div>
+							<div class="col-lg-8"><div class="daly-type"></div></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br>
+	<div class="row">
+		<div class="col-lg-6 col-md-12 col-xs-12">
+			<div id="map"></div>
+			<div class="reset-button">
+				<button type="button" class="btn btn-danger">Reset Zoom</button>
+			</div>
+			<div style="font-size: 14px;">DALYs Score<sup>1</sup></div>
+			<div id="legend"></div>
+		</div>
+		<div row="row">
+			<div class="col-lg-6 col-md-12 col-xs-12">
+				<div id="no-data-message" style="display: none; text-align: center;">No DALYs Data for
+					<div class="missing-country"></div>
+				</div>
+				<div id="subGraph-line"></div>
+			</div>
+		</div>
+	</div>
 </div>
 
-<div id="legend"></div>
-	<div id="no-data-message" style="display: none;">No DALYs Data for
-		<div class="missing-country"></div></div>
-	<div id="subGraph-line"></div>
 
-<!-- Modal HTML -->
-<div id="myModal" class="modal fade">
+
+<!--Information Modal HTML -->
+<div id="infoModal" class="modal fade">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				<h4 class="modal-title">About Disability-Adjusted Life Years (DALY)</h4>
 			</div>
-			<div class="modal-body active modalNumber-1">
+			<div class="modal-body active modal-1">
 				<p>Intro into Dalys</p>
 			</div>
 			<div class="modal-body modal-2" style="display: none">
 				<p>Intro into Dalys2</p>
 			</div>
-
+			<div class="modal-body modal-3" style="display: none">
+				<p>Intro into Dalys3</p>
+				<button type="button" data-dismiss="modal" class="btn">Close</button>
+			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default btn-prev">Previous</button>
 				<button type="button" class="btn btn-primary btn-next">Next</button>
@@ -53,6 +103,52 @@
 		</div>
 	</div>
 </div>
+
+<div id="filterModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">Filter DALY Map</h4>
+			</div>
+			<div class="modal-body">
+				<div class="input-group">
+					<div class="radio">
+						<label><input type="radio" name="dalysType" value="all" checked=""><div class="typeText">All Causes</div></label>
+					</div>
+					<div class="radio">
+						<label><input type="radio" name="dalysType" value="communicable"><div class="typeText">Communicable & other Group I</div></label>
+					</div>
+					<div class="radio">
+						<label><input type="radio" name="dalysType" value="injuries"><div class="typeText">Injuries</div></label>
+					</div>
+					<div class="radio">
+						<label><input type="radio" name="dalysType" value="noncommunicable"><div class="typeText">Noncommunicable diseases</div></label>
+					</div>
+				</div><!-- /input-group -->
+				<div id="dalys-year-radio" class="btn-group" data-toggle="buttons">
+					<a href="#2000" class="btn btn-default active" data-toggle="tab"><input type="radio">2000</a>
+					<a href="#2012" class="btn btn-default" data-toggle="tab"><input type="radio">2012</a>
+				</div>
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" data-dismiss="modal" class="btn">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+<br><br>
+<footer>
+	<div class="container">
+		<div row="row">
+			<p><b>Annotations:</b></p>
+			<p>1. Age-standardized DALYs (per 100,000 population)</p>
+			<p></p>
+		</div>
+
+	</div>
+</footer>
 
 
 	<!-- Load JS libraries -->

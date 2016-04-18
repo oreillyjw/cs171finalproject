@@ -25,10 +25,10 @@ ChoroplethMap.prototype.initVis = function() {
     bottom: 0,
     left: 0
   };
-  vis.width  = 960;
-  vis.height = 550;
+  vis.width  = 575;
+  vis.height = 400;
   vis.active = false;
-  vis.year = '2012';
+  vis.year = $("#dalys-year-radio > a.active").text();
   vis.type = 'all';
   vis.legendSize = 60;
   vis.excludeColor = "gray";
@@ -38,13 +38,13 @@ ChoroplethMap.prototype.initVis = function() {
 
   vis.projection = d3.geo.mollweide()
       .translate([vis.width/2, vis.height/2])
-      .scale(165);
+      .scale(100);
 
   vis.path = d3.geo.path()
       .projection(vis.projection);
 
   vis.svg = d3.select("#" + vis.parentElement ).append("svg")
-      .attr("width", vis.width)
+      .attr("width", "100%")
       .attr("height", vis.height);
 
   vis.svg.append("rect")
@@ -153,6 +153,8 @@ ChoroplethMap.prototype.updateVis = function() {
   keys.enter().append('li')
       .attr('class', 'key')
       .style('border-top-color', String)
+      .append("div")
+      .attr('class', 'text')
       .text(function(d) {
         var r = vis.colors.invertExtent(d);
         return formatNumber(formatNumberWhole(r[0]));
