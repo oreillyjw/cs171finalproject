@@ -1,12 +1,25 @@
 
 var choroplethMap,
+    lineGraph,
     worldData,
     worldNames,
     dalys,
-    dalysHash = {};
+    dalysHash = {},
+    dalysMappingTitles = {
+        all : 'All Causes',
+        communicable : 'Communicable & other Group I',
+        injuries : 'Injuries',
+        noncommunicable: 'Noncommunicable diseases'
+    },
+    color = d3.scale.category10(),
+    formatDate = d3.time.format("%Y"),
+    formatNumber = d3.format("0,000"),
+    formatNumberWhole = d3.format(".0f");
 
 
 loadData();
+
+$("#myModal").modal('show');
 
 function loadData(){
     queue()
@@ -35,6 +48,7 @@ function loadData(){
                         'injuries': d['Injuries'],
                         'noncommunicable': d['Noncommunicable diseases']
                     };
+                    d['DateYear'] = formatDate.parse(d['Year']);
                 });
 
                 createVis();
@@ -43,7 +57,7 @@ function loadData(){
 }
 function createVis(){
     choroplethMap = new ChoroplethMap("map", worldData, worldNames, dalys, dalysHash);
-
+    lineGraph = new LineGraph("subGraph-line", worldData, worldNames, dalys, dalysHash);
 }
 
 
@@ -51,5 +65,31 @@ function createVis(){
 $('#dalys-info').on('change', function(){
     choroplethMap.year = '2012';
     choroplethMap.type = $(this).val();
-    choroplethMap.updateVis();
+    choroplethMap.wrangleData();
+    $('.linetype').remove();
+
+    lineGraph.country =lineGraph.country;
+    lineGraph.updateVis();
+});
+
+
+/*
+Slideshow controls
+ */
+
+$('.modal-footer > .btn').on('click', function(){
+    var numberOfSlider = 2;
+    console.log($('.modal-body.active').attr('class'));
+    var array = $('.modal-body.active').attr('class').split("-");
+    /*
+    Parse slide number
+     http://www.htmlgoodies.com/beyond/javascript/article.php/3471341
+     */
+    //var slideNum -
+    if ($(this).hasClass("btn-prev")){
+        console.log();
+
+    }else{
+        console.log($('.modal-body.active'));
+    }
 });

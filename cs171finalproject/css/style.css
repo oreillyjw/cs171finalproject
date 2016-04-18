@@ -1,15 +1,17 @@
 /* YOUR CSS STYLES */
 body {
   color: #666;
-  background: #f3f3f3;
   font: normal 10px "Helvetica Neue", Helvetica, sans-serif;
   margin: 2em;
 }
+
 #map {
+    background: #f3f3f3;
   border:2px solid #000;
   width:962px;
   height:552px;
 }
+
 .country {
   fill: #ccc;
   stroke: #fff;
@@ -27,7 +29,10 @@ rect {
   fill: none;
   pointer-events: all;
 }
+#no-data-message{
+    font-size: 20px;
 
+}
 /*
  Graph css
 */
@@ -53,6 +58,73 @@ rect {
     fill: black;
 }
 
+
+
+
+.linetype.active{
+    opacity: 1;
+}
+
+.linetype{
+    opacity: .5;
+}
+
+text.linetype{
+    opacity: 1;
+}
+
+text.linetype.active{
+    font-weight: bold;
+}
+
+
+.linetype.longActive{
+    opacity: 1;
+}
+
+text.linetype.longActive{
+    font-weight: bold;
+}
+
+.legend-items circle {
+    opacity: .5;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    stroke-width: 1;
+}
+
+.legend rect {
+    fill:white;
+    stroke:black;
+    opacity:0.8;}
+
+
+#legend {
+    padding: 1.5em 0 0 1.5em;
+}
+
+li.key {
+    border-top-width: 15px;
+    border-top-style: solid;
+    font-size: 1.2em;
+    width: 6%;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.missing-country{
+    display: inline;
+}
+
+.reset-button{
+    margin-top: -42px;
+    margin-left: 10px;
+    padding-bottom: 10px;
+}
 /*********************/
 /*  TOOLTIP OVERLAY  */
 /*********************/
@@ -64,7 +136,7 @@ rect {
     text-align: center;
 }
 
-.d3-tip {
+.d3-tip, .d3-tip-linechart {
     line-height: 1;
     padding: 12px;
     background: #fff;

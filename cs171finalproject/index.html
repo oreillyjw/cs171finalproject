@@ -14,13 +14,45 @@
 <body>
 
 <br><br>
-<div id="map"></div>
-<select id="dalys-info" class="form-control">
-	<option value="all">All Causes</option>
-	<option value="communicable">Communicable & other Group I</option>
-	<option value="injuries">Injuries</option>
-	<option value="noncommunicable">Noncommunicable diseases</option>
-</select>
+	<select id="dalys-info" class="form-control">
+		<option value="all">All Causes</option>
+		<option value="communicable">Communicable & other Group I</option>
+		<option value="injuries">Injuries</option>
+		<option value="noncommunicable">Noncommunicable diseases</option>
+	</select>
+
+	<div id="map"></div>
+<div class="reset-button">
+	<button type="button" class="btn btn-danger">Reset</button>
+</div>
+
+<div id="legend"></div>
+	<div id="no-data-message" style="display: none;">No DALYs Data for
+		<div class="missing-country"></div></div>
+	<div id="subGraph-line"></div>
+
+<!-- Modal HTML -->
+<div id="myModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">About Disability-Adjusted Life Years (DALY)</h4>
+			</div>
+			<div class="modal-body active modalNumber-1">
+				<p>Intro into Dalys</p>
+			</div>
+			<div class="modal-body modal-2" style="display: none">
+				<p>Intro into Dalys2</p>
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default btn-prev">Previous</button>
+				<button type="button" class="btn btn-primary btn-next">Next</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 
 	<!-- Load JS libraries -->
@@ -31,11 +63,12 @@
 	<script src="js/d3.min.js"></script>
 	<script src="js/d3.geo.projection.v0.min.js"></script>
 	<script src="js/topojson.js"></script>
-
 	<script src="js/d3.tip.js"></script>
+	<script src="js/d3.legend.js"></script>
 	<script src="js/colorbrewer.js"></script>
 
 	<script src="js/main.js"></script>
 	<script src="js/choropleth.js"></script>
+	<script src="js/linegraphdalys.js"></script>
 </body>
 </html>
