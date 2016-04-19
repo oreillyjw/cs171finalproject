@@ -139,6 +139,16 @@
 	</div>
 </div>
 <br><br>
+
+<form name="sort-chooser" id="sort-chooser">
+	Sort by:
+	<input type="radio" name="sort-chooser" value="category" checked>Category
+	<input type="radio" name="sort-chooser" value="amount">Amount<br>
+</form>
+</p>
+
+<p id="sankey-chart"></p>
+
 <footer>
 	<div class="container">
 		<div row="row">
@@ -161,10 +171,13 @@
 	<script src="js/topojson.js"></script>
 	<script src="js/d3.tip.js"></script>
 	<script src="js/d3.legend.js"></script>
+	<script src="js/d3.sankey.js"></script>
 	<script src="js/colorbrewer.js"></script>
+	<script src="js/highlight.min.js"></script>
 
 	<script src="js/main.js"></script>
 	<script src="js/choropleth.js"></script>
 	<script src="js/linegraphdalys.js"></script>
+    <script src="js/sankey.js"></script>
 </body>
 </html>
