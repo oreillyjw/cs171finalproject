@@ -65,8 +65,6 @@ ChoroplethMap.prototype.initVis = function() {
 
   var tip = d3.tip().attr('class', 'd3-tip').html(function(d){
     //tooltip-title
-    var mouse = d3.mouse(vis.svg.node()).map( function(d) { return parseInt(d); } );
-    $('.d3-tip.n').css({"top": (mouse[1])});
     return "<div class='tooltip-title' >"+d.name+"</div>";
   });
   /* Invoke the tip in the context of your visualization */
@@ -94,8 +92,10 @@ ChoroplethMap.prototype.initVis = function() {
       .attr("class", "country")
       .attr("d", vis.path)
       .attr("fill", vis.excludeColor)
-      .attr("class", "countries")
-      .on("click", vis.click);
+      .on("click", vis.click)
+      .attr('class', function(d){
+        return "countries " + d.name.replace(/[^a-z]/gi, '').toLowerCase();
+      });
 
   //Show/hide tooltip
   country

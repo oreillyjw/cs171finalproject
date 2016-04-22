@@ -1,4 +1,4 @@
-/* YOUR CSS STYLES */
+/* CSS STYLES */
 body {
   color: #666;
   font: normal 10px "Helvetica Neue", Helvetica, sans-serif;
@@ -218,4 +218,33 @@ Sankey Graph
 .link:hover {
     stroke-opacity: 1;
     fill-opacity: 1;
+}
+
+
+
+/*
+Scatter plot
+*/
+#scatter-matrix{
+    text-align: center;
+}
+#scatter-matrix .axis, .frame {
+    shape-rendering: crispEdges;
+}
+
+#scatter-matrix .axis line {
+    stroke: #ddd;
+}
+
+#scatter-matrix .axis path {
+    display: none;
+}
+
+#scatter-matrix .frame {
+    fill: none;
+    stroke: #aaa;
+}
+
+#scatter-matrix circle {
+    fill-opacity: .7;
 }

@@ -92,7 +92,9 @@ LineGraph.prototype.updateVis = function() {
 
     color.domain(
         d3.keys(vis.displayData[0])
-            .filter(function(key) { return key !== "Year" && key !== "Country" && key !== "DateYear"; })
+            .filter(function(key) {
+                console.log();
+                return vis.allDalysDisplay.indexOf(key) !== -1; })
     );
 
     var dalys = color.domain().map(function(dalyType) {
@@ -120,7 +122,6 @@ LineGraph.prototype.updateVis = function() {
     var xBarAxis = d3.svg.axis()
         .scale(vis.x)
         .orient("bottom")
-        //.ticks(1)
         .tickValues(displayValues)
         .tickFormat(d3.time.format("%Y"));
 

@@ -8,8 +8,6 @@ for(var i = 0, max = radios.length; i < max; i++) {
         sankeySort = this.value;
         updateVisualization();
         console.log(sankeySort);
-        
-        //alert(this.value);
     }
 }
 
@@ -95,7 +93,7 @@ function loadData() {
 
 function updateVisualization() {
 
-      console.log(graph);
+      //console.log(graph);
       d3.selectAll(".link").remove();
       d3.selectAll(".node").remove();
 
