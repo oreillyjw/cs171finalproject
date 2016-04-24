@@ -37,15 +37,16 @@ ChoroplethMap.prototype.initVis = function() {
           .range(colorbrewer.RdPu[9]);
 
   vis.projection = d3.geo.mollweide()
-      .translate([vis.width/2, vis.height/2])
+      .translate([vis.width/2 + 2.5, vis.height/2])
       .scale(100);
 
   vis.path = d3.geo.path()
       .projection(vis.projection);
 
   vis.svg = d3.select("#" + vis.parentElement ).append("svg")
-      .attr("width", "100%")
+      .attr("width", vis.width + 10)
       .attr("height", vis.height);
+  $('#map').css({'width': vis.width + 10});
 
   vis.svg.append("rect")
       .attr("width", vis.width)
@@ -174,6 +175,16 @@ ChoroplethMap.prototype.click = function(d) {
     lineGraph.country = d.name;
     $('.linetype').remove();
     lineGraph.wrangleData();
+
+    scatterMatrix.brush.clear();
+    scatterMatrix.svg.selectAll("circle").classed("hidden",function(k){
+      return k.Country !== d.name;
+    });
+
+    scatterMatrix.svg.selectAll("circle").classed("highlight",function(k){
+      return k.Country === d.name;
+    });
+
   }else{
     $(".missing-country").text(d.name);
     $('#subGraph-line').hide();

@@ -20,11 +20,6 @@ body {
   cursor: pointer;
 }
 
-.hidden {
-  display: none;
-}
-
-
 rect {
   fill: none;
   pointer-events: all;
@@ -247,4 +242,21 @@ Scatter plot
 
 #scatter-matrix circle {
     fill-opacity: .7;
+}
+
+
+#scatter-matrix circle.hidden {
+    fill: #ccc !important;
+    display: initial !important;
+    fill-opacity: .2;
+}
+
+#scatter-matrix circle.highlight{
+    fill-opacity: 1;
+}
+
+#scatter-matrix .extent {
+    fill: #000;
+    fill-opacity: .125;
+    stroke: #fff;
 }

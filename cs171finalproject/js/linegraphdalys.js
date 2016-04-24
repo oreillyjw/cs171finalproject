@@ -39,6 +39,9 @@ LineGraph.prototype.initVis = function() {
     vis.y = d3.scale.linear()
         .range([vis.height, 0]);
 
+    vis.y2 = d3.scale.linear()
+        .range([vis.height, 0]);
+
     vis.svg.append("g")
         .attr("class", "x-axis axis axis-title")
         .attr("transform", "translate(0," + vis.height + ")")

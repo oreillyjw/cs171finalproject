@@ -51,7 +51,7 @@ var choroplethMap,
     formatNumber = d3.format("0,000"),
     formatNumberWhole = d3.format(".0f");
 
-//$("#infoModal").modal('show');
+$("#infoModal").modal('show');
 
 loadData();
 
