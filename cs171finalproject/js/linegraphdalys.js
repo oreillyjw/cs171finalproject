@@ -30,7 +30,7 @@ LineGraph.prototype.initVis = function() {
     vis.allDalysDisplay = activeCategories;
 
     vis.svg = d3.select("#" + vis.parentElement ).append("svg")
-        .attr("width", vis.width +335)
+        .attr("width", vis.width + 125)
         .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
         .append("g")
         .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");

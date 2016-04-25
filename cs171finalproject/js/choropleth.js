@@ -174,10 +174,9 @@ ChoroplethMap.prototype.updateVis = function() {
 ChoroplethMap.prototype.click = function(d) {
 
   var countrySelected = this;
-    console.log(countrySelected);
 
   if (choroplethMap.active === d) return choroplethMap.reset();
-  console.log(choroplethMap.dalysHash[d.name]);
+
   if(choroplethMap.dalysHash[d.name] !== undefined){
       if(lineGraphType === "Graph" ){
           $('#subGraph-line, #dalys-linegraph-radio').show();
@@ -231,7 +230,8 @@ ChoroplethMap.prototype.click = function(d) {
 };
 
 ChoroplethMap.prototype.reset = function() {
-  choroplethMap.g.selectAll(".active").classed("active", choroplethMap.active = false);
-  choroplethMap.g.transition().duration(750).attr("transform", "");
-  choroplethMap.svg.selectAll("#sphere").transition().duration(750).attr("transform", "");
+    choroplethMap.g.selectAll(".active").classed("active", choroplethMap.active = false);
+    choroplethMap.g.transition().duration(750).attr("transform", "");
+    choroplethMap.svg.selectAll("#sphere").transition().duration(750).attr("transform", "");
+    scatterMatrix.resetSelection();
 };

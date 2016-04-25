@@ -1,5 +1,6 @@
 /*
  https://bl.ocks.org/mbostock/4063663
+ http://bl.ocks.org/d3noob/a22c42db65eb00d4e369
 */
 
 ScatterMatrix = function(_parentElement, _countryDalysInfo, _countryDalysHash, _regionDalysInfo, _regionsDalysHash, _lifeExpectancy ) {
@@ -81,6 +82,15 @@ ScatterMatrix.prototype.initVis = function() {
         .scale(vis.y)
         .orient("left")
         .ticks(5);
+
+
+
+    vis.wrangleData();
+};
+
+ScatterMatrix.prototype.wrangleData = function() {
+    var vis = this;
+
     if ( vis.brushEnabled ){
         vis.brush = d3.svg.brush()
             .x(vis.x)
@@ -93,13 +103,6 @@ ScatterMatrix.prototype.initVis = function() {
                 vis.brushend(vis);
             });
     }
-
-
-    vis.wrangleData();
-};
-
-ScatterMatrix.prototype.wrangleData = function() {
-    var vis = this;
 
     vis.displayDataHash = vis.countryDalysInfo.filter(function(value){
         if ( vis.displayOutliers ){
@@ -217,6 +220,11 @@ ScatterMatrix.prototype.updateVis = function() {
         })
         .style("font-size", "12px");
 
+
+    vis.tooltip = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
+
     vis.cell = vis.svg.selectAll(".cell")
         .data(vis.cross(vis.infoToDisplay, vis.infoToDisplay))
         .enter().append("g")
@@ -257,18 +265,13 @@ ScatterMatrix.prototype.plot = function(that, p) {
         vis.y.domain(d3.extent(vis.displayData[p.y]));
     }
 
+
     cell.append("rect")
         .attr("class", "frame")
         .attr("x", vis.padding / 2)
         .attr("y", vis.padding / 2)
         .attr("width", vis.size - vis.padding)
-        .attr("height", vis.size - vis.padding)
-        .on('mouseover', function(d){
-            //console.log(d);
-        })
-        .on('mouseout', function(d){
-            //console.log(d);
-        });
+        .attr("height", vis.size - vis.padding);
 
     cell.selectAll("circle")
         .data(vis.displayDataHash)
@@ -306,15 +309,29 @@ ScatterMatrix.prototype.plot = function(that, p) {
                 p.y.replace(/[^a-z]/gi, '').toLowerCase() + "-1";
         })
         .on('mouseover', function(d){
-            console.log(d);
-            console.log(p);
+            vis.tooltip.transition()
+                .duration(200)
+                .style("opacity", 1);
+            vis.tooltip.html(
+                "<div><b>Country:</b> "+ d.Country +"</div>"
+                +"<div><b>Year:</b> "+ d.Year +"</div>"
+                +"<div><b>"+ p.x +":</b> "+ formatNumber(formatNumberWhole(d[p.x])) +"</div>"
+                +"<div><b>"+ p.y +":</b> "+ formatNumber(formatNumberWhole(d[p.y])) +"</div>"
+                )
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY + 28) + "px");
         })
         .on('mouseout', function(d){
-            console.log(d);
-            console.log(p);
+            vis.tooltip.transition()
+                .duration(500)
+                .style("opacity", 0)
+        })
+        .on('click', function(d){
+            var country = d.Country.replace(/[^a-z]/gi, '').toLowerCase();
+            $('#map .'+country).d3Click();
         });
-};
 
+};
 
 ScatterMatrix.prototype.cross = function(a, b) {
     var vis = this;
@@ -349,12 +366,7 @@ ScatterMatrix.prototype.brushstart = function(p) {
 // Highlight the selected circles.
 ScatterMatrix.prototype.brushmove = function(vis,p) {
     var that = this;
-    console.log("move");
-    console.log(vis);
-    console.log(vis.brush);
-    console.log(p);
     var e = vis.brush.extent();
-    console.log(e);
     vis.svg.selectAll("circle").classed("hidden", function(d) {
         return e[0][0] > d[p.x] || d[p.x] > e[1][0]
             || e[0][1] > d[p.y] || d[p.y] > e[1][1];
@@ -364,6 +376,10 @@ ScatterMatrix.prototype.brushmove = function(vis,p) {
 // If the brush is empty, select all circles.
 ScatterMatrix.prototype.brushend = function(vis) {
     var that = this;
-    console.log(vis);
     if (vis.brush.empty()) vis.svg.selectAll(".hidden").classed("hidden", false);
+};
+
+ScatterMatrix.prototype.resetSelection = function(){
+    var vis = this;
+    vis.svg.selectAll(".hidden").classed("hidden", false);
 };

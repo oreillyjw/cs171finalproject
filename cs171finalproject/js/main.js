@@ -13,7 +13,7 @@ var choroplethMap,
     regionDalys,
     regionDalysHash = {},
     lifeExpecancyHash = {},
-    activeCountries = ['Eritrea','Sierra Leone', 'Syrian Arab Republic'],
+    activeCountries = [],
     activeCategories =  [ 'All Causes', 'Communicable & other Group I'
         , 'Injuries', 'Noncommunicable diseases',  'Life Expectancy'
     ],
@@ -93,7 +93,6 @@ function loadData(){
                         'lifeExpectancy' : d["2012"]
                     };
                 });
-                //console.log(lifeExpecancyHash);
 
                 regionDalys.forEach(function(d){
                     if (regionDalysHash[d.Region] === undefined) {
@@ -112,7 +111,7 @@ function loadData(){
                     }
                     d['DateYear'] = formatDate.parse(d['Year']);
                 });
-                //console.log(regionDalysHash);
+
                 healthDataCsv.forEach(function(d){
                     if (healthDataHash[d.Country] === undefined) {
                         healthDataHash[d.Country] = {};
@@ -180,7 +179,6 @@ $(".daly-type").html("<b>DALY Type</b>: " + dalysMappingTitles[$("input:radio[na
 $("input[name='dalysType']").on('click', function(){
     var val = $(this).val();
     if( choroplethMap.type !== val){
-        console.log(val);
         if ( val === 'all'){
             lineGraph.allDalysDisplay =  [ 'All Causes', 'Communicable & other Group I',
                 'Injuries', 'Noncommunicable diseases',  'Life Expectancy'
@@ -199,18 +197,15 @@ $("input[name='dalysType']").on('click', function(){
 });
 
 
-//$('.fstChoiceItem').each(function(i,d){console.log(d);});
 $('button[name="apply-dalys"]').on('click',function(){
     activeCountries = [];
     $('.fstChoiceItem').each(function(i,d){
-        console.log($(d).attr('data-text'));
         activeCountries.push($(d).attr('data-text'));
     });
 
     $('#scatter-matrix > svg').remove();
     scatterMatrix.wrangleData();
     choroplethMap.wrangleData();
-    console.log("click apply");
 });
 
 
@@ -237,10 +232,16 @@ $("#dalys-linegraph-radio > a").on('click', function(){
         $('#subGraph-line').hide();
         $('#subGraph-table, #dalys-linegraph-radio').show();
     }
+});
 
+$("input[name='scatter-bursh']").on('click', function() {
+    $('#scatter-matrix > svg').remove();
+    scatterMatrix.brushEnabled = $(this).is(":checked");
+    scatterMatrix.wrangleData();
 });
 
 /*
+
 Slideshow controls
  */
 

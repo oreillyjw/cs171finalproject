@@ -10,6 +10,7 @@ body {
   border:2px solid #000;
   max-width:962px;
   max-height:552px;
+    margin-bottom: 20px;
 }
 
 .country {
@@ -22,7 +23,7 @@ body {
 
 rect {
   fill: none;
-  /*pointer-events: all;*/
+  pointer-events: all;
 }
 #no-data-message{
     font-size: 20px;
@@ -116,7 +117,7 @@ li.key {
 }
 
 .reset-button{
-    margin-top: -42px;
+    margin-top: -60px;
     margin-left: 10px;
     padding-bottom: 10px;
 }
@@ -286,4 +287,8 @@ table td{
 
 .fstElement{
     width: 100%;
+}
+
+circle, .legend-items .linetype{
+cursor: pointer;
 }
