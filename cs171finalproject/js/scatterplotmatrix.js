@@ -18,6 +18,7 @@ ScatterMatrix.prototype.initVis = function() {
 
     var vis = this;
     vis.brushCell;
+    vis.brushEnabled = false;
     vis.margin = {
         top: 0,
         right: 0,
@@ -25,7 +26,7 @@ ScatterMatrix.prototype.initVis = function() {
         left: 90
     };
 
-    vis.displayOutliers = $('input[name*="outliers"]').is(":checked");
+    vis.displayOutliers = false;
 
     vis.year = $("#dalys-year-radio > a.active").text();
 
@@ -80,17 +81,19 @@ ScatterMatrix.prototype.initVis = function() {
         .scale(vis.y)
         .orient("left")
         .ticks(5);
+    if ( vis.brushEnabled ){
+        vis.brush = d3.svg.brush()
+            .x(vis.x)
+            .y(vis.y)
+            .on("brushstart", vis.brushstart)
+            .on("brush", function(p){
+                vis.brushmove(vis,p);
+            })
+            .on("brushend", function(p){
+                vis.brushend(vis);
+            });
+    }
 
-    vis.brush = d3.svg.brush()
-        .x(vis.x)
-        .y(vis.y)
-        .on("brushstart", vis.brushstart)
-        .on("brush", function(p){
-            vis.brushmove(vis,p);
-        })
-        .on("brushend", function(p){
-            vis.brushend(vis);
-        });
 
     vis.wrangleData();
 };
@@ -103,14 +106,10 @@ ScatterMatrix.prototype.wrangleData = function() {
             return value.Year === vis.year;
         }else{
             return value.Year === vis.year
-                && value.Country !== "Eritrea"
-                && value.Country !== "Sierra Leone"
-                && value.Country !== "Syrian Arab Republic";
+                && activeCountries.indexOf(value.Country) === -1;
         }
 
     });
-
-    console.log(vis.displayDataHash);
 
     vis.displayData = {};
     vis.displayDataHash.forEach(function(d){
@@ -122,9 +121,9 @@ ScatterMatrix.prototype.wrangleData = function() {
             }
         }
     );
-
-    console.log(vis.countryDalysHash);
-    vis.brush.clear();
+    if ( vis.brushEnabled ) {
+        vis.brush.clear();
+    }
 
     vis.updateVis();
 };
@@ -149,12 +148,10 @@ ScatterMatrix.prototype.updateVis = function() {
 
     vis.yAxis.tickSize(-vis.size * vis.n);
 
+
     vis.yAxistime.tickSize(-vis.size * vis.n)
         .tickFormat(d3.time.format("%Y"))
         .tickValues(vis.displayValuesX);
-
-
-    console.log(vis.brush);
 
     vis.svg = d3.select("#" + vis.parentElement).append("svg")
         .attr("width", vis.size * vis.n + vis.padding + 10 + vis.margin.left)
@@ -191,7 +188,6 @@ ScatterMatrix.prototype.updateVis = function() {
         .attr("class", "x-axis axis-title")
         .style("text-anchor", "middle")
         .text(function(d){
-            console.log(d);
             return vis.axisLabels[d];
         })
         .style("font-size", "12px");
@@ -217,7 +213,6 @@ ScatterMatrix.prototype.updateVis = function() {
         .attr("class", "y-axis axis-title")
         .style("text-anchor", "middle")
         .text(function(d){
-            console.log(d);
             return vis.axisLabels[d];
         })
         .style("font-size", "12px");
@@ -237,8 +232,10 @@ ScatterMatrix.prototype.updateVis = function() {
         .attr("x", vis.padding)
         .attr("y", vis.padding)
         .attr("dy", ".71em");
-    console.log(vis.brush);
-    vis.cell.call(vis.brush);
+
+    if ( vis.brushEnabled ){
+        vis.cell.call(vis.brush);
+    }
 
 
 };

@@ -3,15 +3,17 @@
  https://github.com/jay3dec/MultiLineChart_D3
  */
 
-LineGraph = function(_parentElement, _worldData, __worldNames, _dalysInfo, _dalysHash) {
+LineGraph = function(_parentElement, _worldData, __worldNames, _dalysInfo, _dalysHash, _regionDalysInfo, _regionsDalysHash, _lifeExpectancy ) {
 
     this.parentElement = _parentElement;
     this.worldData = _worldData;
     this.worldNames = __worldNames;
     this.dalysHash = _dalysHash;
     this.dalysInfo = _dalysInfo;
-    this.dalyCategoryType = 'all';
-    this.country = "Afghanistan";
+    this.regionDalysInfo = _regionDalysInfo;
+    this.regionsDalysHash = _regionsDalysHash;
+    this.lifeExpectancy = _lifeExpectancy;
+    this.country = "World";
 
     this.initVis();
 };
@@ -20,11 +22,12 @@ LineGraph = function(_parentElement, _worldData, __worldNames, _dalysInfo, _daly
 LineGraph.prototype.initVis = function() {
     var vis = this;
 
-    vis.margin = {top: 60, right: 40, bottom: 60, left: 60};
-    vis.width = 250;
-    vis.height = 250;
+    vis.margin = {top: 30, right: 10, bottom: 150, left: 90};
+    vis.width = 350;
+    vis.height = 300;
     vis.type = 'all';
-    vis.allDalysDisplay = [ 'All Causes', 'Communicable & other Group I', 'Injuries', 'Noncommunicable diseases'];
+
+    vis.allDalysDisplay = activeCategories;
 
     vis.svg = d3.select("#" + vis.parentElement ).append("svg")
         .attr("width", vis.width +335)
@@ -62,11 +65,15 @@ LineGraph.prototype.initVis = function() {
         .attr("class", "y-axis axis-title")
         .style("text-anchor", "end");
 
+
     vis.line = d3.svg.line()
         .x( function(d){ return vis.x(d.DateYear);})
         .y(function(d){ return vis.y(d.Dalys);})
         .interpolate("basis");
 
+    vis.line2 = d3.svg.line()
+        .x(function(d) { return vis.x(d.DateYear); })
+        .y(function(d) { return vis.y2(d.Dalys); });
 
     vis.wrangleData();
 };
@@ -77,13 +84,22 @@ LineGraph.prototype.wrangleData = function() {
     vis.displayData = vis.dalysInfo.filter(function(value){
         return value.Country === vis.country;
     });
+
+    if( vis.displayData.length === 0 ){
+        vis.displayData = vis.regionDalysInfo.filter(function(value){
+            return value.Region === vis.country;
+        });
+    }
+
     vis.updateVis();
 };
 
 LineGraph.prototype.updateVis = function() {
     var vis = this;
 
+    $('.y-axis2').remove();
     $("text.title").remove();
+
     vis.svg.append("text")
         .attr("class", "title")
         .attr("x", vis.width/2)
@@ -92,11 +108,9 @@ LineGraph.prototype.updateVis = function() {
         .style("font-size","14px")
         .text(vis.country);
 
-
     color.domain(
         d3.keys(vis.displayData[0])
             .filter(function(key) {
-                console.log();
                 return vis.allDalysDisplay.indexOf(key) !== -1; })
     );
 
@@ -109,14 +123,18 @@ LineGraph.prototype.updateVis = function() {
         };
     });
 
+
+    var y1Dalys = dalys.filter(function(key){
+        return key.dalyType !== 'Life Expectancy';
+    });
+
     var displayValues = d3.extent(vis.displayData, function(d) {return d.DateYear; });
 
     vis.x.domain(displayValues);
 
     vis.y.domain([
-        0, d3.max(dalys, function(c) { return d3.max(c.values, function(v) { return v.Dalys; }); })
+        0, d3.max(y1Dalys, function(c) { return d3.max(c.values, function(v) { return v.Dalys; }); })
     ]);
-
 
     var yBarAxis = d3.svg.axis()
         .scale(vis.y)
@@ -128,6 +146,9 @@ LineGraph.prototype.updateVis = function() {
         .tickValues(displayValues)
         .tickFormat(d3.time.format("%Y"));
 
+    var y2Dalys = dalys.filter(function(key){
+        return key.dalyType === 'Life Expectancy';
+    });
 
     vis.svg.selectAll("g.x-axis")
         .transition()
@@ -149,10 +170,42 @@ LineGraph.prototype.updateVis = function() {
         });
     });
 
+    if ( vis.allDalysDisplay.indexOf('Life Expectancy') > -1){
+        vis.svg.append("g")
+            .attr("class", "y-axis2 axis age")
+            .attr("transform", "translate("+vis.width+",0)")
+            .append("text")
+            .attr("transform", "translate(5,-30)")
+            .attr("y", 6)
+            .attr("dy", ".71em")
+            .attr("class", "y-axis2 axis-title age")
+            .style("text-anchor", "end");
+
+        vis.y2.domain([
+            0, d3.max(y2Dalys, function(c) { return d3.max(c.values, function(v) { return v.Dalys; }); })
+        ]);
+
+        var y2BarAxis = d3.svg.axis()
+            .scale(vis.y2)
+            .orient("right");
+
+        vis.svg.selectAll("g.y-axis2")
+            .transition()
+            .duration(800)
+            .call(y2BarAxis)
+            .selectAll("text.y-axis2.axis-title")
+            .text("Age")
+            .style("font-size", "12px");
+
+        vis.displaySecondAxis = true;
+    }else{
+        vis.displaySecondAxis = false;
+    }
+
     vis.drawCircles();
     // Loop through each symbol / key
     var daly = vis.svg.selectAll(".line")
-        .data(dalys)
+        .data(y1Dalys)
         .attr("class", "line");
 
     daly.enter()
@@ -174,7 +227,32 @@ LineGraph.prototype.updateVis = function() {
             $("." + dalysMappingTitles[d.dalyType] ).attr("class", "linetype "+ dalysMappingTitles[d.dalyType]);
         });
 
+
+    if( vis.displaySecondAxis){
+        var daly2 = vis.svg.selectAll(".line")
+            .data(y2Dalys)
+            .attr("class", "line");
+
+        daly2.enter().append("path")        // Add the valueline2 path.
+            .attr("d", function(d) {
+                return vis.line2(d.values); })
+            .style("stroke-width", 3)
+            .attr("data-legend",function(d) { return d.dalyType;})
+            .attr("data-legend-color",function(d) { return color(d.dalyType);})
+            .style("stroke", function(d) { return color(d.dalyType); })
+            .attr("class", function(d) {
+                return "linetype " + dalysMappingTitles[d.dalyType];
+            })
+            .on('mouseover', function(d){
+                $("." + dalysMappingTitles[d.dalyType]).attr("class", "linetype active "+ dalysMappingTitles[d.dalyType]);
+            })
+            .on('mouseout', function(d){
+                $("." + dalysMappingTitles[d.dalyType] ).attr("class", "linetype "+ dalysMappingTitles[d.dalyType]);
+            });
+    }
+
     vis.drawLegend();
+    vis.renderTable();
 
 
 };
@@ -198,7 +276,11 @@ LineGraph.prototype.drawCircles = function() {
         .transition()
         .duration(550)
         .attr("cy", function(k){
-            return vis.y(k.Dalys);
+            if (k.dalyType === 'Life Expectancy'){
+                return vis.y2(k.Dalys);
+            }else{
+                return vis.y(k.Dalys);
+            }
         })
         .attr("r", 8)
         .attr("class", function(d) {
@@ -218,14 +300,35 @@ LineGraph.prototype.drawCircles = function() {
 LineGraph.prototype.drawLegend = function() {
     var vis = this;
 
+    $('.legend').remove();
     legend = vis.svg.append("g")
         .attr("class","legend")
-        .attr("transform","translate("+(vis.width+35)+",0)")
+        .attr("transform","translate(62.5,366)")
         .style("font-size","12px")
         .call(d3.legend);
 
     legend
         .style("font-size","15px")
         .attr("data-style-padding",15)
-        .call(d3.legend);
+        .call(d3.legend)
+        .attr("x",0);
 };
+
+LineGraph.prototype.renderTable = function(){
+    var vis = this;
+
+    vis.displayData.forEach(function(d){
+        if (d['Region'] !== undefined ){
+            $('.dalyType-location').text(d['Region'])
+        }else{
+            $('.dalyType-location').text(d['Country'])
+        }
+
+        for ( var key in d){
+            if( dalysMappingTitles[key] !== undefined ){
+                $('.dalyType-'+dalysMappingTitles[key] + '-'+d['Year']).text(formatNumber(formatNumberWhole(d[key])));
+            }
+        }
+    });
+};
+

@@ -9,10 +9,12 @@
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/font-awesome.min.css">
 	<link rel="stylesheet" href="css/colorbrewer.css">
+	<link rel="stylesheet" href="css/fastselect.min.css">
+	<link rel="stylesheet" href="css/jquery-ui.css">
+
 	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<!-- Fixed navbar -->
 <nav class="navbar navbar-default">
 	<div class="container">
 		<div class="navbar-header">
@@ -33,17 +35,31 @@
 		</div><!--/.nav-collapse -->
 	</div>
 </nav>
-<br/><br/><br/>
+<br/>
 
 <!-- Main Container -->
 <div class="container">
 	<div class="row">
+		<div class="col-lg-4 col-md-4 col-xs-4" style="padding-left: 0;">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="input-group">
+						<form id="country-search-box" name="search-country" style="margin-top:4px;">
+							<input id="country" type="text" class="form-control" placeholder="Search for Country" style="height:42px;">
+						</form>
+							<span class="input-group-btn" >
+								<button class="btn btn-default" type="button" style="margin-top:4px;"><i class="fa fa-search btn" aria-hidden="true"></i></button>
+							</span>
+					</div><!-- /input-group -->
+				</div><!-- /.col-lg-6 -->
+			</div><!-- /.row -->
+		</div>
 		<div class="col-lg-2 col-md-2 col-xs-2" style="padding-right: 0;">
-			<button type="button" class="btn btn-default filters" data-toggle="modal" data-target="#filterModal">Filters</button>
+			<button type="button" class="btn btn-default filters" data-toggle="modal" data-target="#filterModal"style="margin-top:4px;">Filters</button>
 			<div style="display: inline; float: right; font-size: 14px; margin-top: 15px;">Applied Filters:</div>
 		</div>
-		<div class="col-lg-10 col-md-10 col-xs-10" style="padding-left: 0;">
-			<div class="col-lg-6 col-md-6 col-xs-6">
+		<div class="col-lg-6 col-md-6 col-xs-6" style="padding-left: 0;">
+			<div class="col-lg-12 col-md-6 col-xs-6">
 				<div class=" panel panel-default applied-filters">
 					<div class="panel-body">
 						<div class="row">
@@ -54,6 +70,7 @@
 				</div>
 			</div>
 		</div>
+
 	</div>
 	<br>
 	<div class="row">
@@ -65,18 +82,63 @@
 			<div style="font-size: 14px;">DALYs Score<sup>1</sup></div>
 			<div id="legend"></div>
 		</div>
-		<!--<div row="row">-->
-			<div class="col-lg-6 col-md-12 col-xs-12">
+		<div class="col-lg-6 col-md-12 col-xs-12">
+				<div id="dalys-linegraph-radio" class="btn-group" data-toggle="buttons" style="float:right;">
+					<a href="#line-graph" class="btn btn-default active" data-toggle="tab"><input type="radio">Graph</a>
+					<a href="#line-table" class="btn btn-default" data-toggle="tab"><input type="radio">Table</a>
+				</div>
 				<div id="no-data-message" style="display: none; text-align: center;">No DALYs Data for
 					<div class="missing-country"></div>
 				</div>
 				<div id="subGraph-line"></div>
+				<table  id="subGraph-table" class="table table-striped" style="display:none;">
+					<thead>
+					<tr>
+						<th colspan="3" class="dalyType-location" style="text-align: center;"></th>
+					</tr>
+						<tr>
+							<th> </th>
+							<th class="year-2000">2000</th>
+							<th class="year-2012">2012</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="dalyType-all">All Causes</td>
+							<td class="dalyType-all-2000"></td>
+							<td class="dalyType-all-2012"></td>
+						</tr>
+						<tr>
+							<td class="dalyType-communicable">Communicable & other Group I</td>
+							<td class="dalyType-communicable-2000"></td>
+							<td class="dalyType-communicable-2012"></td>
+						</tr>
+						<tr>
+							<td class="dalyType-injuries">Injuries</td>
+							<td class="dalyType-injuries-2000"></td>
+							<td class="dalyType-injuries-2012"></td>
+						</tr>
+						<tr>
+							<td class="dalyType-noncommunicable">Noncommunicable diseases</td>
+							<td class="dalyType-noncommunicable-2000"></td>
+							<td class="dalyType-noncommunicable-2012"></td>
+						</tr>
+						<tr>
+							<td class="dalyType-lifeexpectancy">Life Expectancy</td>
+							<td class="dalyType-lifeexpectancy-2000"></td>
+							<td class="dalyType-lifeexpectancy-2012"></td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
-		<!--</div>-->
 	</div>
 </div>
 
-
+<div class="row">
+	<div class="col-lg-12 col-md-12 col-xs-12">
+		<div id="scatter-matrix"></div>
+	</div>
+</div>
 
 <!--Information Modal HTML -->
 <div id="infoModal" class="modal fade">
@@ -109,37 +171,215 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title">Filter DALY Map</h4>
+				<h4 class="modal-title">Filter DALY Data</h4>
 			</div>
 			<div class="modal-body">
 				<div class="input-group">
+					<h5>Select Info Type</h5>
 					<div class="radio">
-						<label><input type="radio" name="dalysType" value="all" checked=""><div class="typeText">All Causes</div></label>
+						<label><input type="radio" name="dalysType" value="all" checked=""><div class="typeText">All Causes (DALY)</div></label>
 					</div>
 					<div class="radio">
-						<label><input type="radio" name="dalysType" value="communicable"><div class="typeText">Communicable & other Group I</div></label>
+						<label><input type="radio" name="dalysType" value="communicable"><div class="typeText">Communicable & other Group I (DALY)</div></label>
 					</div>
 					<div class="radio">
-						<label><input type="radio" name="dalysType" value="injuries"><div class="typeText">Injuries</div></label>
+						<label><input type="radio" name="dalysType" value="injuries"><div class="typeText">Injuries (DALY)</div></label>
 					</div>
 					<div class="radio">
-						<label><input type="radio" name="dalysType" value="noncommunicable"><div class="typeText">Noncommunicable diseases</div></label>
+						<label><input type="radio" name="dalysType" value="noncommunicable"><div class="typeText">Noncommunicable diseases (DALY)</div></label>
+					</div>
+					<div class="radio">
+						<label><input type="radio" name="dalysType" value="lifeexpectancy"><div class="typeText">Life Expectancy</div></label>
 					</div>
 				</div><!-- /input-group -->
+				<div class="filter-countries">
+					<h5>Remove Country/Countries</h5>
+					<!-- common countries to filter: 'Eritrea','Sierra Leone', 'Syrian Arab Republic'-->
+					<select class="multipleSelect" multiple name="dalysType">
+						<option value="Afghanistan"><div class="typeText">Afghanistan</div></option>
+						<option value="Albania"><div class="typeText">Albania</div></option>
+						<option value="Algeria"><div class="typeText">Algeria</div></option>
+						<option value="Angola"><div class="typeText">Angola</div></option>
+						<option value="Argentina"><div class="typeText">Argentina</div></option>
+						<option value="Armenia"><div class="typeText">Armenia</div></option>
+						<option value="Australia"><div class="typeText">Australia</div></option>
+						<option value="Austria"><div class="typeText">Austria</div></option>
+						<option value="Azerbaijan"><div class="typeText">Azerbaijan</div></option>
+						<option value="Bahamas"><div class="typeText">Bahamas</div></option>
+						<option value="Bahrain"><div class="typeText">Bahrain</div></option>
+						<option value="Bangladesh"><div class="typeText">Bangladesh</div></option>
+						<option value="Barbados"><div class="typeText">Barbados</div></option>
+						<option value="Belarus"><div class="typeText">Belarus</div></option>
+						<option value="Belgium"><div class="typeText">Belgium</div></option>
+						<option value="Belize"><div class="typeText">Belize</div></option>
+						<option value="Benin"><div class="typeText">Benin</div></option>
+						<option value="Bhutan"><div class="typeText">Bhutan</div></option>
+						<option value="Bolivia (Plurinational State of)"><div class="typeText">Bolivia (Plurinational State of)</div></option>
+						<option value="Bosnia and Herzegovina"><div class="typeText">Bosnia and Herzegovina</div></option>
+						<option value="Botswana"><div class="typeText">Botswana</div></option>
+						<option value="Brazil"><div class="typeText">Brazil</div></option>
+						<option value="Brunei Darussalam"><div class="typeText">Brunei Darussalam</div></option>
+						<option value="Bulgaria"><div class="typeText">Bulgaria</div></option>
+						<option value="Burkina Faso"><div class="typeText">Burkina Faso</div></option>
+						<option value="Burundi"><div class="typeText">Burundi</div></option>
+						<option value="Cabo Verde"><div class="typeText">Cabo Verde</div></option>
+						<option value="Cambodia"><div class="typeText">Cambodia</div></option>
+						<option value="Cameroon"><div class="typeText">Cameroon</div></option>
+						<option value="Canada"><div class="typeText">Canada</div></option>
+						<option value="Central African Republic"><div class="typeText">Central African Republic</div></option>
+						<option value="Chad"><div class="typeText">Chad</div></option>
+						<option value="Chile"><div class="typeText">Chile</div></option>
+						<option value="China"><div class="typeText">China</div></option>
+						<option value="Colombia"><div class="typeText">Colombia</div></option>
+						<option value="Comoros"><div class="typeText">Comoros</div></option>
+						<option value="Congo"><div class="typeText">Congo</div></option>
+						<option value="Costa Rica"><div class="typeText">Costa Rica</div></option>
+						<option value="Cote d'Ivoire"><div class="typeText">Cote d'Ivoire</div></option>
+						<option value="Croatia"><div class="typeText">Croatia</div></option>
+						<option value="Cuba"><div class="typeText">Cuba</div></option>
+						<option value="Cyprus"><div class="typeText">Cyprus</div></option>
+						<option value="Czech Republic"><div class="typeText">Czech Republic</div></option>
+						<option value="Democratic People's Republic of Korea"><div class="typeText">Democratic People's Republic of Korea</div></option>
+						<option value="Democratic Republic of the Congo"><div class="typeText">Democratic Republic of the Congo</div></option>
+						<option value="Denmark"><div class="typeText">Denmark</div></option>
+						<option value="Djibouti"><div class="typeText">Djibouti</div></option>
+						<option value="Dominican Republic"><div class="typeText">Dominican Republic</div></option>
+						<option value="Ecuador"><div class="typeText">Ecuador</div></option>
+						<option value="Egypt"><div class="typeText">Egypt</div></option>
+						<option value="El Salvador"><div class="typeText">El Salvador</div></option>
+						<option value="Equatorial Guinea"><div class="typeText">Equatorial Guinea</div></option>
+						<option value="Eritrea"><div class="typeText">Eritrea</div></option>
+						<option value="Estonia"><div class="typeText">Estonia</div></option>
+						<option value="Ethiopia"><div class="typeText">Ethiopia</div></option>
+						<option value="Fiji"><div class="typeText">Fiji</div></option>
+						<option value="Finland"><div class="typeText">Finland</div></option>
+						<option value="France"><div class="typeText">France</div></option>
+						<option value="Gabon"><div class="typeText">Gabon</div></option>
+						<option value="Gambia"><div class="typeText">Gambia</div></option>
+						<option value="Georgia"><div class="typeText">Georgia</div></option>
+						<option value="Germany"><div class="typeText">Germany</div></option>
+						<option value="Ghana"><div class="typeText">Ghana</div></option>
+						<option value="Greece"><div class="typeText">Greece</div></option>
+						<option value="Guatemala"><div class="typeText">Guatemala</div></option>
+						<option value="Guinea"><div class="typeText">Guinea</div></option>
+						<option value="Guinea-Bissau"><div class="typeText">Guinea-Bissau</div></option>
+						<option value="Guyana"><div class="typeText">Guyana</div></option>
+						<option value="Haiti"><div class="typeText">Haiti</div></option>
+						<option value="Honduras"><div class="typeText">Honduras</div></option>
+						<option value="Hungary"><div class="typeText">Hungary</div></option>
+						<option value="Iceland"><div class="typeText">Iceland</div></option>
+						<option value="India"><div class="typeText">India</div></option>
+						<option value="Indonesia"><div class="typeText">Indonesia</div></option>
+						<option value="Iran (Islamic Republic of)"><div class="typeText">Iran (Islamic Republic of)</div></option>
+						<option value="Iraq"><div class="typeText">Iraq</div></option>
+						<option value="Ireland"><div class="typeText">Ireland</div></option>
+						<option value="Israel"><div class="typeText">Israel</div></option>
+						<option value="Italy"><div class="typeText">Italy</div></option>
+						<option value="Jamaica"><div class="typeText">Jamaica</div></option>
+						<option value="Japan"><div class="typeText">Japan</div></option>
+						<option value="Jordan"><div class="typeText">Jordan</div></option>
+						<option value="Kazakhstan"><div class="typeText">Kazakhstan</div></option>
+						<option value="Kenya"><div class="typeText">Kenya</div></option>
+						<option value="Kuwait"><div class="typeText">Kuwait</div></option>
+						<option value="Kyrgyzstan"><div class="typeText">Kyrgyzstan</div></option>
+						<option value="Lao People's Democratic Republic"><div class="typeText">Lao People's Democratic Republic</div></option>
+						<option value="Latvia"><div class="typeText">Latvia</div></option>
+						<option value="Lebanon"><div class="typeText">Lebanon</div></option>
+						<option value="Lesotho"><div class="typeText">Lesotho</div></option>
+						<option value="Liberia"><div class="typeText">Liberia</div></option>
+						<option value="Libya"><div class="typeText">Libya</div></option>
+						<option value="Lithuania"><div class="typeText">Lithuania</div></option>
+						<option value="Luxembourg"><div class="typeText">Luxembourg</div></option>
+						<option value="Madagascar"><div class="typeText">Madagascar</div></option>
+						<option value="Malawi"><div class="typeText">Malawi</div></option>
+						<option value="Malaysia"><div class="typeText">Malaysia</div></option>
+						<option value="Maldives"><div class="typeText">Maldives</div></option>
+						<option value="Mali"><div class="typeText">Mali</div></option>
+						<option value="Malta"><div class="typeText">Malta</div></option>
+						<option value="Mauritania"><div class="typeText">Mauritania</div></option>
+						<option value="Mauritius"><div class="typeText">Mauritius</div></option>
+						<option value="Mexico"><div class="typeText">Mexico</div></option>
+						<option value="Mongolia"><div class="typeText">Mongolia</div></option>
+						<option value="Montenegro"><div class="typeText">Montenegro</div></option>
+						<option value="Morocco"><div class="typeText">Morocco</div></option>
+						<option value="Mozambique"><div class="typeText">Mozambique</div></option>
+						<option value="Myanmar"><div class="typeText">Myanmar</div></option>
+						<option value="Namibia"><div class="typeText">Namibia</div></option>
+						<option value="Nepal"><div class="typeText">Nepal</div></option>
+						<option value="Netherlands"><div class="typeText">Netherlands</div></option>
+						<option value="New Zealand"><div class="typeText">New Zealand</div></option>
+						<option value="Nicaragua"><div class="typeText">Nicaragua</div></option>
+						<option value="Niger"><div class="typeText">Niger</div></option>
+						<option value="Nigeria"><div class="typeText">Nigeria</div></option>
+						<option value="Norway"><div class="typeText">Norway</div></option>
+						<option value="Oman"><div class="typeText">Oman</div></option>
+						<option value="Pakistan"><div class="typeText">Pakistan</div></option>
+						<option value="Panama"><div class="typeText">Panama</div></option>
+						<option value="Papua New Guinea"><div class="typeText">Papua New Guinea</div></option>
+						<option value="Paraguay"><div class="typeText">Paraguay</div></option>
+						<option value="Peru"><div class="typeText">Peru</div></option>
+						<option value="Philippines"><div class="typeText">Philippines</div></option>
+						<option value="Poland"><div class="typeText">Poland</div></option>
+						<option value="Portugal"><div class="typeText">Portugal</div></option>
+						<option value="Qatar"><div class="typeText">Qatar</div></option>
+						<option value="Republic of Korea"><div class="typeText">Republic of Korea</div></option>
+						<option value="Republic of Moldova"><div class="typeText">Republic of Moldova</div></option>
+						<option value="Romania"><div class="typeText">Romania</div></option>
+						<option value="Russian Federation"><div class="typeText">Russian Federation</div></option>
+						<option value="Rwanda"><div class="typeText">Rwanda</div></option>
+						<option value="Saudi Arabia"><div class="typeText">Saudi Arabia</div></option>
+						<option value="Senegal"><div class="typeText">Senegal</div></option>
+						<option value="Serbia"><div class="typeText">Serbia</div></option>
+						<option value="Sierra Leone"><div class="typeText">Sierra Leone</div></option>
+						<option value="Singapore"><div class="typeText">Singapore</div></option>
+						<option value="Slovakia"><div class="typeText">Slovakia</div></option>
+						<option value="Slovenia"><div class="typeText">Slovenia</div></option>
+						<option value="Solomon Islands"><div class="typeText">Solomon Islands</div></option>
+						<option value="Somalia"><div class="typeText">Somalia</div></option>
+						<option value="South Africa"><div class="typeText">South Africa</div></option>
+						<option value="South Sudan"><div class="typeText">South Sudan</div></option>
+						<option value="Spain"><div class="typeText">Spain</div></option>
+						<option value="Sri Lanka"><div class="typeText">Sri Lanka</div></option>
+						<option value="Sudan"><div class="typeText">Sudan</div></option>
+						<option value="Suriname"><div class="typeText">Suriname</div></option>
+						<option value="Swaziland"><div class="typeText">Swaziland</div></option>
+						<option value="Sweden"><div class="typeText">Sweden</div></option>
+						<option value="Switzerland"><div class="typeText">Switzerland</div></option>
+						<option value="Syrian Arab Republic"><div class="typeText">Syrian Arab Republic</div></option>
+						<option value="Tajikistan"><div class="typeText">Tajikistan</div></option>
+						<option value="Thailand"><div class="typeText">Thailand</div></option>
+						<option value="The former Yugoslav republic of Macedonia"><div class="typeText">The former Yugoslav republic of </div></option>Macedonia
+						<option value="Timor-Leste"><div class="typeText">Timor-Leste</div></option>
+						<option value="Togo"><div class="typeText">Togo</div></option>
+						<option value="Trinidad and Tobago"><div class="typeText">Trinidad and Tobago</div></option>
+						<option value="Tunisia"><div class="typeText">Tunisia</div></option>
+						<option value="Turkey"><div class="typeText">Turkey</div></option>
+						<option value="Turkmenistan"><div class="typeText">Turkmenistan</div></option>
+						<option value="Uganda"><div class="typeText">Uganda</div></option>
+						<option value="Ukraine"><div class="typeText">Ukraine</div></option>
+						<option value="United Arab Emirates"><div class="typeText">United Arab Emirates</div></option>
+						<option value="United Kingdom"><div class="typeText">United Kingdom</div></option>
+						<option value="United Republic of Tanzania"><div class="typeText">United Republic of Tanzania</div></option>
+						<option value="United States of America"><div class="typeText">United States of America</div></option>
+						<option value="Uruguay"><div class="typeText">Uruguay</div></option>
+						<option value="Uzbekistan"><div class="typeText">Uzbekistan</div></option>
+						<option value="Venezuela (Bolivarian Republic of)"><div class="typeText">Venezuela (Bolivarian Republic of)</div></option>
+						<option value="Vietnam"><div class="typeText">Vietnam</div></option>
+						<option value="Yemen"><div class="typeText">Yemen</div></option>
+						<option value="Zambia"><div class="typeText">Zambia</div></option>
+						<option value="Zimbabwe"><div class="typeText">Zimbabwe</div></option>
+					</select>
+				</div>
 				<div id="dalys-year-radio" class="btn-group" data-toggle="buttons">
+					<h5>Years Available:</h5>
 					<a href="#2000" class="btn btn-default active" data-toggle="tab"><input type="radio">2000</a>
 					<a href="#2012" class="btn btn-default" data-toggle="tab"><input type="radio">2012</a>
 				</div>
-				<div class="checkbox">
-					<label style="font-size: 14px;">
-						<input name="outliers" type="checkbox" value="1" checked="" style="margin-top:3px;">Display Outliers
-					</label>
-				</div>
-
 			</div>
 
 			<div class="modal-footer">
 				<button type="button" data-dismiss="modal" class="btn">Close</button>
+				<button type="button" name="apply-dalys" class="btn btn-primary">Apply</button>
 			</div>
 		</div>
 	</div>
@@ -152,11 +392,7 @@
 	<!--<input type="radio" name="sort-chooser" value="amount">Amount<br>-->
 <!--</form>-->
 <!--<p id="sankey-chart"></p>-->
-<div class="row">
-	<div class="col-lg-12 col-md-12 col-xs-12">
-		<div id="scatter-matrix"></div>
-	</div>
-</div>
+
 <br><br>
 <footer>
 	<div class="container">
@@ -187,6 +423,8 @@
 	<script src="js/otherThirdParty/topojson.js"></script>
 	<script src="js/otherThirdParty/colorbrewer.js"></script>
 	<script src="js/otherThirdParty/highlight.min.js"></script>
+	<script src="js/otherThirdParty/fastselect.js"></script>
+	<script src="js/otherThirdParty/jquery-ui.js"></script>
 
 	<script src="js/main.js"></script>
 	<script src="js/choropleth.js"></script>

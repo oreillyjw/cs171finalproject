@@ -1,5 +1,7 @@
 /*
  http://www.htmlgoodies.com/beyond/javascript/article.php/3471341
+ http://jqueryui.com/autocomplete/
+ http://dbrekalo.github.io/fastselect/
  */
 var choroplethMap,
     lineGraph,
@@ -11,7 +13,12 @@ var choroplethMap,
     regionDalys,
     regionDalysHash = {},
     lifeExpecancyHash = {},
+    activeCountries = ['Eritrea','Sierra Leone', 'Syrian Arab Republic'],
+    activeCategories =  [ 'All Causes', 'Communicable & other Group I'
+        , 'Injuries', 'Noncommunicable diseases',  'Life Expectancy'
+    ],
     healthDataHash = {},
+    lineGraphType = 'Graph',
     dalysMappingTitles = {
         all : 'All Causes',
         communicable : 'Communicable & other Group I',
@@ -52,7 +59,7 @@ var choroplethMap,
     formatNumberWhole = d3.format(".0f");
 
 $("#infoModal").modal('show');
-
+$('.multipleSelect').fastselect();
 loadData();
 
 function loadData(){
@@ -98,6 +105,11 @@ function loadData(){
                         'injuries': d['Injuries'] = +d['Injuries'],
                         'noncommunicable':d['Noncommunicable diseases'] = +d['Noncommunicable diseases'],
                     };
+
+                    if (lifeExpecancyHash[d.Region] !== undefined ) {
+                        d['Life Expectancy'] = lifeExpecancyHash[d.Region][d.Year]['lifeExpectancy'];
+
+                    }
                     d['DateYear'] = formatDate.parse(d['Year']);
                 });
                 //console.log(regionDalysHash);
@@ -118,8 +130,6 @@ function loadData(){
                     };
 
                 });
-
-                console.log(healthDataHash);
 
                 countryDalys.forEach(function (d) {
                     if (countryDalysHash[d.Country] === undefined) {
@@ -153,15 +163,13 @@ function loadData(){
 
                 });
 
-
-
                 createVis();
             }
         });
 }
 function createVis(){
     choroplethMap = new ChoroplethMap("map", worldData, worldNames, countryDalys, countryDalysHash);
-    lineGraph = new LineGraph("subGraph-line", worldData, worldNames, countryDalys, countryDalysHash);
+    lineGraph = new LineGraph("subGraph-line", worldData, worldNames, countryDalys, countryDalysHash, regionDalys, regionDalysHash, lifeExpecancyHash);
     scatterMatrix = new ScatterMatrix("scatter-matrix", countryDalys, countryDalysHash, regionDalys, regionDalysHash, lifeExpecancyHash);
 
 }
@@ -170,16 +178,43 @@ $(".daly-year").html("<b>Year</b>: " + $("#dalys-year-radio > a.active").text())
 $(".daly-type").html("<b>DALY Type</b>: " + dalysMappingTitles[$("input:radio[name='dalysType']:checked").val()]);
 
 $("input[name='dalysType']").on('click', function(){
-    if( choroplethMap.type !== $(this).val()){
-        choroplethMap.type = $(this).val();
+    var val = $(this).val();
+    if( choroplethMap.type !== val){
+        console.log(val);
+        if ( val === 'all'){
+            lineGraph.allDalysDisplay =  [ 'All Causes', 'Communicable & other Group I',
+                'Injuries', 'Noncommunicable diseases',  'Life Expectancy'
+            ];
+        }else{
+            lineGraph.allDalysDisplay = [ dalysMappingTitles[val] ];
+        }
+        choroplethMap.type = val;
         choroplethMap.wrangleData();
         $(".daly-type").html("<b>DALY Type</b>: " + dalysMappingTitles[$("input:radio[name='dalysType']:checked").val()]);
+
+        $('.linetype').remove();
+        lineGraph.wrangleData();
+
     }
 });
 
+
+//$('.fstChoiceItem').each(function(i,d){console.log(d);});
+$('button[name="apply-dalys"]').on('click',function(){
+    activeCountries = [];
+    $('.fstChoiceItem').each(function(i,d){
+        console.log($(d).attr('data-text'));
+        activeCountries.push($(d).attr('data-text'));
+    });
+
+    $('#scatter-matrix > svg').remove();
+    scatterMatrix.wrangleData();
+    choroplethMap.wrangleData();
+    console.log("click apply");
+});
+
+
 $("#dalys-year-radio > a ").on('click', function(){
-    console.log("click");
-    console.log($(this).text());
     var year = $(this).text();
     if( choroplethMap.year !== year) {
         choroplethMap.year = year;
@@ -191,19 +226,32 @@ $("#dalys-year-radio > a ").on('click', function(){
     }
 });
 
+$("#dalys-linegraph-radio > a").on('click', function(){
+    var type = $(this).text();
+
+    lineGraphType = type;
+    if ( type === "Graph" ){
+        $('#subGraph-table').hide();
+        $('#subGraph-line, #dalys-linegraph-radio').show();
+    }else{
+        $('#subGraph-line').hide();
+        $('#subGraph-table, #dalys-linegraph-radio').show();
+    }
+
+});
+
 /*
 Slideshow controls
  */
 
 $('.modal-footer > .btn').on('click', function(){
     var numberOfSlides = 3;
-    console.log($('.modal-body.active').attr('class'));
+
     var array = $('.modal-body.active').attr('class').split("-");
     var currentNum = parseInt(array[array.length -1]);
     /*
     Parse slide number
      */
-    //var slideNum -
     if ($(this).hasClass("btn-prev")){
         currentNum=currentNum-1;
         if( currentNum === 0){
@@ -222,17 +270,208 @@ $('.modal-footer > .btn').on('click', function(){
     }
 });
 
-
-$('input[name*="outliers"]').on('click',function(){
-    console.log($(this).is(":checked"));
-    $('#scatter-matrix > svg').remove();
-    scatterMatrix.displayOutliers = $(this).is(":checked");
-    scatterMatrix.wrangleData();
-});
-
-
 $('.reset-button > .btn.btn-danger').on('click', function(){
     choroplethMap.reset()
 });
 
+$(function() {
+    var availableTags = [
+        "Afghanistan",
+        "Albania",
+        "Algeria",
+        "Angola",
+        "Argentina",
+        "Armenia",
+        "Australia",
+        "Austria",
+        "Azerbaijan",
+        "Bahamas",
+        "Bahrain",
+        "Bangladesh",
+        "Barbados",
+        "Belarus",
+        "Belgium",
+        "Belize",
+        "Benin",
+        "Bhutan",
+        "Bolivia (Plurinational State of)",
+        "Bosnia and Herzegovina",
+        "Botswana",
+        "Brazil",
+        "Brunei Darussalam",
+        "Bulgaria",
+        "Burkina Faso",
+        "Burundi",
+        "Cabo Verde",
+        "Cambodia",
+        "Cameroon",
+        "Canada",
+        "Central African Republic",
+        "Chad",
+        "Chile",
+        "China",
+        "Colombia",
+        "Comoros",
+        "Congo",
+        "Costa Rica",
+        "Cote d'Ivoire",
+        "Croatia",
+        "Cuba",
+        "Cyprus",
+        "Czech Republic",
+        "Democratic People's Republic of Korea",
+        "Democratic Republic of the Congo",
+        "Denmark",
+        "Djibouti",
+        "Dominican Republic",
+        "Ecuador",
+        "Egypt",
+        "El Salvador",
+        "Equatorial Guinea",
+        "Eritrea",
+        "Estonia",
+        "Ethiopia",
+        "Fiji",
+        "Finland",
+        "France",
+        "Gabon",
+        "Gambia",
+        "Georgia",
+        "Germany",
+        "Ghana",
+        "Greece",
+        "Guatemala",
+        "Guinea",
+        "Guinea-Bissau",
+        "Guyana",
+        "Haiti",
+        "Honduras",
+        "Hungary",
+        "Iceland",
+        "India",
+        "Indonesia",
+        "Iran (Islamic Republic of)",
+        "Iraq",
+        "Ireland",
+        "Israel",
+        "Italy",
+        "Jamaica",
+        "Japan",
+        "Jordan",
+        "Kazakhstan",
+        "Kenya",
+        "Kuwait",
+        "Kyrgyzstan",
+        "Lao People's Democratic Republic",
+        "Latvia",
+        "Lebanon",
+        "Lesotho",
+        "Liberia",
+        "Libya",
+        "Lithuania",
+        "Luxembourg",
+        "Madagascar",
+        "Malawi",
+        "Malaysia",
+        "Maldives",
+        "Mali",
+        "Malta",
+        "Mauritania",
+        "Mauritius",
+        "Mexico",
+        "Mongolia",
+        "Montenegro",
+        "Morocco",
+        "Mozambique",
+        "Myanmar",
+        "Namibia",
+        "Nepal",
+        "Netherlands",
+        "New Zealand",
+        "Nicaragua",
+        "Niger",
+        "Nigeria",
+        "Norway",
+        "Oman",
+        "Pakistan",
+        "Panama",
+        "Papua New Guinea",
+        "Paraguay",
+        "Peru",
+        "Philippines",
+        "Poland",
+        "Portugal",
+        "Qatar",
+        "Republic of Korea",
+        "Republic of Moldova",
+        "Romania",
+        "Russian Federation",
+        "Rwanda",
+        "Saudi Arabia",
+        "Senegal",
+        "Serbia",
+        "Sierra Leone",
+        "Singapore",
+        "Slovakia",
+        "Slovenia",
+        "Solomon Islands",
+        "Somalia",
+        "South Africa",
+        "South Sudan",
+        "Spain",
+        "Sri Lanka",
+        "Sudan",
+        "Suriname",
+        "Swaziland",
+        "Sweden",
+        "Switzerland",
+        "Syrian Arab Republic",
+        "Tajikistan",
+        "Thailand",
+        "The former Yugoslav republic of Macedonia",
+        "Timor-Leste",
+        "Togo",
+        "Trinidad and Tobago",
+        "Tunisia",
+        "Turkey",
+        "Turkmenistan",
+        "Uganda",
+        "Ukraine",
+        "United Arab Emirates",
+        "United Kingdom",
+        "United Republic of Tanzania",
+        "United States of America",
+        "Uruguay",
+        "Uzbekistan",
+        "Venezuela (Bolivarian Republic of)",
+        "Vietnam",
+        "Yemen",
+        "Zambia",
+        "Zimbabwe"
+    ];
+    $( "#country" ).autocomplete({
+        source: availableTags
+    });
+});
+
+$( "#country-search-box" ).submit(function( event ) {
+    event.preventDefault();
+    var country = $('#country').val().replace(/[^a-z]/gi, '').toLowerCase();
+    $('#map .'+country).d3Click();
+});
+
+$('.fa.fa-search').on('click', function(){
+    var country = $('#country').val().replace(/[^a-z]/gi, '').toLowerCase();
+    $('#map .'+country).d3Click();
+});
+
+/*
+ http://stackoverflow.com/questions/9063383/how-to-invoke-click-event-programmatically-in-d3
+ */
+jQuery.fn.d3Click = function () {
+    this.each(function (i, e) {
+        var evt = new MouseEvent("click");
+        e.dispatchEvent(evt);
+    });
+};
 

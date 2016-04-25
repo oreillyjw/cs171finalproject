@@ -2,6 +2,7 @@
  http://bl.ocks.org/mbostock/3734336
  http://techslides.com/demos/d3/d3-world-map-mouse-click-zoom.html
  http://eyeseast.github.io/visible-data/2013/08/27/responsive-legends-with-d3/
+ http://bl.ocks.org/linssen/7352810
  */
 
 ChoroplethMap = function(_parentElement, _worldData, __worldNames, _dalysInfo, _dalysHash) {
@@ -23,7 +24,7 @@ ChoroplethMap.prototype.initVis = function() {
     top: 0,
     right: 0,
     bottom: 0,
-    left: 0
+    left: 10
   };
   vis.width  = 575;
   vis.height = 400;
@@ -33,8 +34,9 @@ ChoroplethMap.prototype.initVis = function() {
   vis.legendSize = 60;
   vis.excludeColor = "gray";
 
+
   vis.colors = d3.scale.quantize()
-          .range(colorbrewer.RdPu[9]);
+          .range(colorbrewer.RdPu[8]);
 
   vis.projection = d3.geo.mollweide()
       .translate([vis.width/2 + 2.5, vis.height/2])
@@ -46,7 +48,9 @@ ChoroplethMap.prototype.initVis = function() {
   vis.svg = d3.select("#" + vis.parentElement ).append("svg")
       .attr("width", vis.width + 10)
       .attr("height", vis.height);
-  $('#map').css({'width': vis.width + 10});
+
+
+  $('#map').css({'width': vis.width + 18});
 
   vis.svg.append("rect")
       .attr("width", vis.width)
@@ -111,7 +115,7 @@ ChoroplethMap.prototype.wrangleData = function() {
   var vis = this;
 
   vis.displayData = vis.dalysInfo.filter(function(value){
-    return value.Year === vis.year;
+      return value.Year === vis.year && activeCountries.indexOf(value.Country) === -1;
   });
 
   vis.updateVis();
@@ -125,7 +129,11 @@ ChoroplethMap.prototype.updateVis = function() {
     return d[dalysMappingTitles[vis.type]];
   });
 
-  vis.colors.domain(extent);
+  if( vis.type === 'lifeexpectancy'){
+    vis.colors.domain(extent);
+  }else{
+    vis.colors.domain([Math.floor(extent[0]/1000)*1000,Math.ceil(extent[1]/1000)*1000]);
+  }
 
   var countries = vis.svg.selectAll("path.countries");
 
@@ -133,7 +141,7 @@ ChoroplethMap.prototype.updateVis = function() {
       .transition()
       .duration(1000)
       .attr("fill", function(d){
-        if( vis.dalysHash[d.name] !== undefined){
+        if( vis.dalysHash[d.name] !== undefined && activeCountries.indexOf(d.name) === -1){
           if(isNaN(vis.dalysHash[d.name][vis.year][vis.type])){
             return vis.excludeColor;
           }else{
@@ -166,29 +174,42 @@ ChoroplethMap.prototype.updateVis = function() {
 ChoroplethMap.prototype.click = function(d) {
 
   var countrySelected = this;
+    console.log(countrySelected);
 
   if (choroplethMap.active === d) return choroplethMap.reset();
   console.log(choroplethMap.dalysHash[d.name]);
   if(choroplethMap.dalysHash[d.name] !== undefined){
-    $('#subGraph-line').show();
-    $('#no-data-message').hide();
-    lineGraph.country = d.name;
-    $('.linetype').remove();
-    lineGraph.wrangleData();
+      if(lineGraphType === "Graph" ){
+          $('#subGraph-line, #dalys-linegraph-radio').show();
+      }else{
+          $('#subGraph-table, #dalys-linegraph-radio').show();
+      }
 
-    scatterMatrix.brush.clear();
-    scatterMatrix.svg.selectAll("circle").classed("hidden",function(k){
-      return k.Country !== d.name;
-    });
+      $('#no-data-message').hide();
+      lineGraph.country = d.name;
+      $('.linetype').remove();
+      lineGraph.wrangleData();
 
-    scatterMatrix.svg.selectAll("circle").classed("highlight",function(k){
-      return k.Country === d.name;
-    });
+      if(scatterMatrix.brushEnabled ){
+          scatterMatrix.brush.clear();
+      }
+
+      scatterMatrix.svg.selectAll("circle").classed("hidden",function(k){
+          return k.Country !== d.name;
+      });
+
+      scatterMatrix.svg.selectAll("circle").classed("highlight",function(k){
+          return k.Country === d.name;
+      });
 
   }else{
-    $(".missing-country").text(d.name);
-    $('#subGraph-line').hide();
-    $('#no-data-message').show();
+      $(".missing-country").text(d.name);
+      if(lineGraphType === "Graph" ){
+          $('#subGraph-line, #dalys-linegraph-radio').hide();
+      }else{
+          $('#subGraph-table, #dalys-linegraph-radio').hide();
+      }
+      $('#no-data-message').show();
   }
 
 

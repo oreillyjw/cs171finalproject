@@ -22,7 +22,7 @@ body {
 
 rect {
   fill: none;
-  pointer-events: all;
+  /*pointer-events: all;*/
 }
 #no-data-message{
     font-size: 20px;
@@ -259,4 +259,31 @@ Scatter plot
     fill: #000;
     fill-opacity: .125;
     stroke: #fff;
+}
+
+.fstMultipleMode .fstControls{
+    width: 100%;
+}
+.table{
+    width: 90%;
+    margin: 40px;
+}
+
+table th{
+    font-size: 16px;
+}
+
+table td{
+    font-size: 14px;
+}
+
+#country{
+    border: 1px solid #ccc;
+    border-top-left-radius: 4px;
+    border-right: none;
+    border-bottom-left-radius: 4px;
+}
+
+.fstElement{
+    width: 100%;
 }
