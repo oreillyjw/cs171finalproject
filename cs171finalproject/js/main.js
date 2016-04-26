@@ -248,9 +248,7 @@ $("#page-radio > a").on('click', function(){
         $('.container[data-page="1"]').show();
         $('.container[data-page="2"]').hide();
     }
-    console.log(type);
 });
-
 
 
 /*

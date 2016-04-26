@@ -166,46 +166,22 @@
 
 
 <div class="container" data-page="2" style="display: none;">
-	<form name="sort-chooser" id="sort-chooser">
-	Sort by:
-	<input type="radio" name="sort-chooser" value="category" checked>Category
-	<input type="radio" name="sort-chooser" value="amount">Amount<br>
-	</form>
+	<div class="row">
+		<div class="col-lg-2 col-md-2 col-xs-2" style="padding-right: 0;">
+			<button type="button" class="btn btn-default filters" data-toggle="modal" data-target="#filterModal2"style="margin-top:4px;">Filters</button>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12 col-md-12 col-xs-12" style="padding-right: 0;">
+			<div id="stack-chart"></div>
+		</div>
+	</div>
 
-
-	<label for="stack-year">Year </label>
-	<select class="form-control" id="stack-year">
-		<option value='2000'>2000</option>
-		<option value='2012'>2012</option>
-	</select>
-
-	<label for="stack-type">Stack style </label>
-	<select class="form-control" id="stack-type">
-		<option value="zero">Amount</option>
-		<option value="expand">Percentage</option>
-	</select>
-
-	<label for="stack-data">Data </label>
-	<select class="form-control" id="stack-data">
-		<option disabled>By Region:</option>
-		<option value="World by Cause.xml" checked>- World</option>
-		<option value="World Bank regions East Asia and Pacific.xml">- East Asia and Pacific</option>
-		<option value="World Bank regions Europe and Central Asia.xml">- Europe and Central Asia</option>
-		<option value="World Bank regions Latin America and Caribbean.xml">- Latin America and Caribbean</option>
-		<option value="World Bank regions Middle East and North Africa.xml">- Middle East and North Africa</option>
-		<option value="World Bank regions South Asia.xml">- South Asia</option>
-		<option value="World Bank regions Sub-Saharan Africa.xml">- Sub-Saharan Africa</option>
-		<option disabled>By Income Group:</option>
-		<option value="World Bank Income Groups High Income.xml">- High income</option>
-		<option value="World Bank Income Groups Upper middle income.xml">- Upper middle income</option>
-		<option value="World Bank Income Groups Lower middle income.xml">- Lower middle income</option>
-		<option value="World Bank Income Groups Low income.xml">- Low income</option>
-	</select>
-
-	<div id="sankey-chart"></div>
-
-	<div id="stack-chart"></div>
-
+	<div class="row">
+		<div class="col-lg-12 col-md-12 col-xs-12" style="padding-right: 0;">
+			<div id="sankey-chart"></div>
+		</div>
+	</div>
 </div>
 
 
@@ -463,6 +439,61 @@
 		</div>
 	</div>
 </div>
+
+
+<div id="filterModal2" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">Filter DALY Data</h4>
+			</div>
+			<div class="modal-body">
+				<form name="sort-chooser" id="sort-chooser">
+					Sort by:
+					<input type="radio" name="sort-chooser" value="category" checked>Category
+					<input type="radio" name="sort-chooser" value="amount">Amount<br>
+				</form>
+
+
+				<label for="stack-year">Year </label>
+				<select class="form-control" id="stack-year">
+					<option value='2000'>2000</option>
+					<option value='2012'>2012</option>
+				</select>
+
+				<label for="stack-type">Stack style </label>
+				<select class="form-control" id="stack-type">
+					<option value="zero">Amount</option>
+					<option value="expand">Percentage</option>
+				</select>
+
+				<label for="stack-data">Data </label>
+				<select class="form-control" id="stack-data">
+					<option disabled>By Region:</option>
+					<option value="World by Cause.xml" checked>- World</option>
+					<option value="World Bank regions East Asia and Pacific.xml">- East Asia and Pacific</option>
+					<option value="World Bank regions Europe and Central Asia.xml">- Europe and Central Asia</option>
+					<option value="World Bank regions Latin America and Caribbean.xml">- Latin America and Caribbean</option>
+					<option value="World Bank regions Middle East and North Africa.xml">- Middle East and North Africa</option>
+					<option value="World Bank regions South Asia.xml">- South Asia</option>
+					<option value="World Bank regions Sub-Saharan Africa.xml">- Sub-Saharan Africa</option>
+					<option disabled>By Income Group:</option>
+					<option value="World Bank Income Groups High Income.xml">- High income</option>
+					<option value="World Bank Income Groups Upper middle income.xml">- Upper middle income</option>
+					<option value="World Bank Income Groups Lower middle income.xml">- Lower middle income</option>
+					<option value="World Bank Income Groups Low income.xml">- Low income</option>
+				</select>
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" data-dismiss="modal" class="btn">Close</button>
+				<button type="button" name="apply-dalys" class="btn btn-primary">Apply</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <br><br>
 
 
@@ -487,8 +518,8 @@
 	<script src="js/otherThirdParty/bootstrap.min.js"></script>
 	<script src="js/otherThirdParty/queue.min.js"></script>
 
-	<!--<script src="js/d3/d3.min.js"></script>-->
-	<script src="js/d3/d3.js"></script>
+	<script src="js/d3/d3.min.js"></script>
+	<!--<script src="js/d3/d3.js"></script>-->
 	<script src="js/d3/d3.geo.projection.v0.min.js"></script>
 	<script src="js/d3/d3.tip.js"></script>
 	<script src="js/d3/d3.legend.js"></script>
