@@ -13,7 +13,7 @@ for(var i = 0, max = radios.length; i < max; i++) {
 
 
 var margin = {top: 10, right: 10, bottom: 10, left: 10},
-    width = 800 - margin.left - margin.right,
+    width = 500 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 
 var formatNumber = d3.format(",.0f"),    // zero decimal places
