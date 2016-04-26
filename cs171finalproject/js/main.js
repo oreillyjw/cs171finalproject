@@ -14,9 +14,7 @@ var choroplethMap,
     regionDalysHash = {},
     lifeExpecancyHash = {},
     activeCountries = [],
-    activeCategories =  [ 'All Causes', 'Communicable & other Group I'
-        , 'Injuries', 'Noncommunicable diseases',  'Life Expectancy'
-    ],
+    activeCategories =  [ 'All Causes', 'Communicable & other Group I', 'Injuries', 'Noncommunicable diseases',  'Life Expectancy'],
     healthDataHash = {},
     lineGraphType = 'Graph',
     dalysMappingTitles = {
@@ -239,6 +237,21 @@ $("input[name='scatter-bursh']").on('click', function() {
     scatterMatrix.brushEnabled = $(this).is(":checked");
     scatterMatrix.wrangleData();
 });
+
+
+$("#page-radio > a").on('click', function(){
+    var type = $(this).text();
+    if( type === 'Region' ){
+        $('.container[data-page="1"]').hide();
+        $('.container[data-page="2"]').show();
+    }else{
+        $('.container[data-page="1"]').show();
+        $('.container[data-page="2"]').hide();
+    }
+    console.log(type);
+});
+
+
 
 /*
 

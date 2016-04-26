@@ -3,7 +3,7 @@
 var allCategories = ['All Causes'];
 var allAges = ['All ages (total) years'];
 //there are some double spaces in original group names. They are removed in data cleaning.
-var ageGroups = ['0-27 days','1-59 months','5-14 years','15-29 years', '30-49 years','50-69 years','60-69 years', '70+ years']
+var ageGroups = ['0-27 days','1-59 months','5-14 years','15-29 years', '30-49 years','50-69 years','60-69 years', '70+ years'];
 var lv1 = ['Communicable & other Group I', 'Noncommunicable diseases', 'Injuries'];
 var lv4 = ['Syphilis','Chlamydia','Gonorrhoea','Trichomoniasis','Other STDs',
             'Whooping cough','Diphtheria','Measles','Tetanus','Malaria',
@@ -210,7 +210,7 @@ var tooltip = d3.select("#stack-chart")
     .style("position", "absolute")
     .style("z-index", "20")
     .style("visibility", "hidden")
-    .style("top", "50px")
+    .style("top", "150px")
     .style("left", width + "px");
 
 var vertical = d3.select("#stack-chart")
@@ -220,7 +220,7 @@ var vertical = d3.select("#stack-chart")
         .style("z-index", "19")
         .style("width", "1px")
         .style("height", height+ margin.top +"px")
-        .style("top", margin.top + "px")
+        .style("top", (margin.top + 168) + "px")
         .style("bottom", margin.bottom + "px")
         .style("left", "0px")
         .style("background", "black");

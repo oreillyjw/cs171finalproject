@@ -292,3 +292,12 @@ table td{
 circle, .legend-items .linetype{
 cursor: pointer;
 }
+
+
+#stack-chart .axis path,
+#stack-chart .axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}

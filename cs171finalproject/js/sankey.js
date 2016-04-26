@@ -42,7 +42,7 @@ var colorRef;
 var link = sankey_svg_1.append("g")
         .selectAll(".link");
 
-loadData()
+loadData();
 
 function loadData() {
 
