@@ -18,8 +18,7 @@ var margin = {top: 10, right: 10, bottom: 10, left: 10},
 
 var formatNumber = d3.format(",.0f"),    // zero decimal places
     format = function(d) { return formatNumber(d); },
-    //color = d3.scale.category10();
-    color = d3.scale.ordinal().range(["#2ca02c", "#1f77b4", "#d62728"]);
+    color = d3.scale.category10();
 
 // append the svg canvas to the page
 var sankey_svg_1 = d3.select("#sankey-chart").append("svg")
@@ -32,7 +31,7 @@ var sankey_svg_1 = d3.select("#sankey-chart").append("svg")
 // Set the sankey diagram properties
 var sankey = d3.sankey()
     .nodeWidth(15)
-    .nodePadding(2)
+    .nodePadding(0)
     .size([width, height]);
 
 var path = sankey.link();
@@ -40,111 +39,11 @@ var path = sankey.link();
 var graph;
 var colorRef;
 
-var sankeyLookup;
-
-//listen to user input
-var sankeyYear = d3.select("#stack-year").property("value");
-var sankeyData = d3.select("#stack-data").property("value");
-var sankeyAge = d3.select("#sankey-age").property("value");
-var sankeySex = d3.select("#sankey-sex").property("value");
-
-
-d3.select("#sankey-age").on("change", function (d) {loadData();});
-d3.select("#sankey-sex").on("change", function (d) {loadData();});
-d3.select("#stack-year").on("change", function (d) {loadData();});
-d3.select("#stack-data").on("change", function (d) {loadData();});
-
-
 var link = sankey_svg_1.append("g")
         .selectAll(".link");
 
 loadData();
 
-function loadData() {
-  sankeyYear = d3.select("#sankey-year").property("value");
-  sankeyData = d3.select("#sankey-data").property("value");
-  sankeyAge = d3.select("#sankey-age").property("value");
-  sankeySex = d3.select("#sankey-sex").property("value");
-
-  //lookup table
-  
-  var lookup = {};
-  d3.csv("world_by_cause_2012_paired.csv", function(error, data) {
-    data.forEach(function (d) {lookup[d.target] = [d.source, d.group];});
-    sankeyLookup = lookup;
-  });
-
-
-  d3.json("data/DALY_2000_2012/"+sankeyData, function(error, data) {
-
-    data.fact.forEach(function (d) {
-      //clean data
-      d.dims.YEAR = +d.dims.YEAR;
-      d.dims.AGEGROUP = d.dims.AGEGROUP.replace('  ', ' ');
-      d.Value = parseInt(d.Value.replace(/,/g, ''), 10);
-      // convert NAN to 0
-      if (isNaN(d.Value)) {d.Value = 0;};
-    });
-    
-    //filter facts
-    //TODO age & Sex filter does not work
-    data.fact = data.fact.filter(function(d) {return +d.dims.YEAR == +sankeyYear;});
-    data.fact = data.fact.filter(function(d) {
-      if (d.dims.AGEGROUP == sankeyAge) {
-      console.log(d.dims.AGEGROUP, sankeyAge)};
-      return d.dims.AGEGROUP == sankeyAge;
-    });
-    data.fact = data.fact.filter(function(d) {return d.dims.SEX == sankeySex;});
-
-    console.log("json", data.fact);
-    graph = {"nodes" : [], "links" : []};
-
-    data.fact.forEach(function (d) {
-
-
-
-      if (Object.keys(sankeyLookup).indexOf(d.dims.GHECAUSES) != -1){
-        graph.nodes.push({ "name": d.dims.GHECAUSES, "group": sankeyLookup[d.dims.GHECAUSES][1] });
-        graph.nodes.push({ "name": sankeyLookup[d.dims.GHECAUSES][0], "group": sankeyLookup[d.dims.GHECAUSES][1] });
-        graph.links.push({ "source": sankeyLookup[d.dims.GHECAUSES][0],
-                           "target": d.dims.GHECAUSES,
-                           "group": sankeyLookup[d.dims.GHECAUSES][1],
-                           "value": d.Value });
-      };
-    });
-
-    //logic: load separate hierachy lookup file, load json, filter data
-    //go through each cause and cross reference hierachy lookup file to see if they are target nodes, if so push value
-    //lookup table structure {target cause: [source cause, group]}
-
-       colorRef = graph.nodes;
-
-       // return only the distinct / unique nodes
-       graph.nodes = d3.keys(d3.nest()
-         .key(function (d) { return d.name; })
-         .map(graph.nodes));
-
-           // loop through each link replacing the text with its index from node
-       graph.links.forEach(function (d, i) {
-         graph.links[i].source = graph.nodes.indexOf(graph.links[i].source);
-         graph.links[i].target = graph.nodes.indexOf(graph.links[i].target);
-       });
-
-       //now loop through each nodes to make nodes an array of objects
-       // rather than an array of strings
-       graph.nodes.forEach(function (d, i) {
-         graph.nodes[i] = { "name": d };
-       });
-  
-  sankey
-      .nodes(graph.nodes)
-      .links(graph.links)
-      .layout(4);
-
-  updateVisualization(); 
-  });
-
-/*
 function loadData() {
 
 // load the data (using the timelyportfolio csv method)
@@ -190,7 +89,6 @@ function loadData() {
 
   })
 };
-*/
 
 
 function updateVisualization() {
