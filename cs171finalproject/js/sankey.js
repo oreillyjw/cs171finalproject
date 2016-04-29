@@ -11,13 +11,13 @@ for(var i = 0, max = radios.length; i < max; i++) {
     }
 }
 
-var margin = {top: 10, right: 10, bottom: 10, left: 10},
+var margin = {top: 50, right: 10, bottom: 50, left: 10},
     width = 800 - margin.left - margin.right,
-    height = 600 - margin.top - margin.bottom;
+    height = 800 - margin.top - margin.bottom;
 
 var formatNumber = d3.format(",.0f"),    // zero decimal places
     format = function(d) { return formatNumber(d); },
-    color = d3.scale.ordinal().range(["#2ca02c", "#1f77b4", "#d62728"]);
+    color2 = d3.scale.ordinal().range(["#2ca02c", "#1f77b4", "#d62728"]);
 
 // append the svg canvas to the page
 var sankey_svg_1 = d3.select("#sankey-chart").append("svg")
@@ -25,7 +25,7 @@ var sankey_svg_1 = d3.select("#sankey-chart").append("svg")
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform",
-        "translate(" + margin.left + "," + margin.top + ")");
+        "translate(" + margin.left + "," + (-20) + ")");
 
 // Set the sankey diagram properties
 var sankey = d3.sankey()
@@ -54,7 +54,7 @@ d3.select("#sankey-data").on("change", function (d) {loadData();});
 
 var link = sankey_svg_1.append("g")
     .selectAll(".link");
-
+//Female -145
 loadData();
 
 function loadData() {
@@ -62,7 +62,8 @@ function loadData() {
     sankeyData = d3.select("#sankey-data").property("value");
     sankeyAge = d3.select("#sankey-age").property("value");
     sankeySex = d3.select("#sankey-sex").property("value");
-
+    sankeySex = 'Female';
+    console.log(sankeySex);
     //lookup table
 
     var lookup = {};
@@ -228,11 +229,11 @@ console.log(graph.links);
         .attr("d", path)
         .style("stroke-width", function(d) { return Math.max(1, d.dy); })
         .style("fill", function(d) {
-            d.color = color(colorlookup(d.group, colorRef));
+            d.color = color2(colorlookup(d.group, colorRef));
             return d3.rgb(d.color);
         })
         .style("stroke", function(d) {
-            d.color = color(colorlookup(d.group, colorRef));
+            d.color = color2(colorlookup(d.group, colorRef));
             return d3.rgb(d.color);
         })
         .style("opacity", 0.3)
@@ -275,7 +276,7 @@ console.log(graph.links);
         .attr("height", function(d) { return d.dy; })
         .attr("width", sankey.nodeWidth())
         .style("fill", function(d) {
-            return d.color = color(colorlookup(d.name, colorRef));
+            return d.color = color2(colorlookup(d.name, colorRef));
         })
         .style("stroke", function(d) {
             return d3.rgb(d.color).darker(2); })
