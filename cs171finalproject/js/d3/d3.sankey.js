@@ -54,6 +54,7 @@ d3.sankey = function() {
     var curvature = .3;
 
     function link(d) {
+
       var x0 = d.source.x + d.source.dx,
           x1 = d.target.x,
           xi = d3.interpolateNumber(x0, x1),
@@ -61,6 +62,19 @@ d3.sankey = function() {
           x3 = xi(1 - curvature),
           y0 = d.source.y + d.sy + d.dy / 2,
           y1 = d.target.y + d.ty + d.dy / 2;
+      if( isNaN(y1)){
+        y1 = 500;
+        console.log(d);
+      }
+      if (d.target.name === "Prostate cancer"){
+        console.log(d);
+        console.log(d.target.name);
+        console.log("M" + x0 + "," + y0
+            + "C" + x2 + "," + y0
+            + " " + x3 + "," + y1
+            + " " + x1 + "," + y1);
+      }
+
       return "M" + x0 + "," + y0
            + "C" + x2 + "," + y0
            + " " + x3 + "," + y1

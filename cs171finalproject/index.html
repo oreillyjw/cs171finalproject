@@ -51,7 +51,7 @@
 </div>
 
 <!-- Main Container -->
-<div class="container" data-page="1">
+<div class="container" data-page="1"  style="display: none;">
 	<div class="row">
 		<div class="col-lg-4 col-md-4 col-xs-4" style="padding-left: 0;">
 			<div class="row">
@@ -165,7 +165,7 @@
 </div>
 
 
-<div class="container" data-page="2" style="display: none;">
+<div class="container" data-page="2">
 	<div class="row">
 		<div class="col-lg-2 col-md-2 col-xs-2" style="padding-right: 0;">
 			<button type="button" class="btn btn-default filters" data-toggle="modal" data-target="#filterModal2"style="margin-top:4px;">Filters</button>
@@ -173,7 +173,7 @@
 	</div>
 	<div class="row">
 		<div class="col-lg-12 col-md-12 col-xs-12" style="padding-right: 0;">
-			<div id="stack-chart"></div>
+			<!--<div id="stack-chart"></div>-->
 		</div>
 	</div>
 
@@ -484,6 +484,58 @@
 					<option value="World Bank Income Groups Lower middle income.xml">- Lower middle income</option>
 					<option value="World Bank Income Groups Low income.xml">- Low income</option>
 				</select>
+
+				<form name="sort-chooser" id="sort-chooser">
+					Sort by:
+					<input type="radio" name="sort-chooser" value="category" checked>Category
+					<input type="radio" name="sort-chooser" value="amount">Amount<br>
+				</form>
+				</p>
+
+				<label for="sankey-year">Year </label>
+				<select class="form-control" id="sankey-year">
+					<option value='2000'>2000</option>
+					<option value='2012'>2012</option>
+				</select>
+
+
+				<label for="sankey-data">Data </label>
+				<select class="form-control" id="sankey-data">
+					<option disabled>By Region:</option>
+					<option value="World by Cause.xml" checked>- World</option>
+					<option value="World Bank regions East Asia and Pacific.xml">- East Asia and Pacific</option>
+					<option value="World Bank regions Europe and Central Asia.xml">- Europe and Central Asia</option>
+					<option value="World Bank regions Latin America and Caribbean.xml">- Latin America and Caribbean</option>
+					<option value="World Bank regions Middle East and North Africa.xml">- Middle East and North Africa</option>
+					<option value="World Bank regions South Asia.xml">- South Asia</option>
+					<option value="World Bank regions Sub-Saharan Africa.xml">- Sub-Saharan Africa</option>
+					<option disabled>By Income Group:</option>
+					<option value="World Bank Income Groups High Income.xml">- High income</option>
+					<option value="World Bank Income Groups Upper middle income.xml">- Upper middle income</option>
+					<option value="World Bank Income Groups Lower middle income.xml">- Lower middle income</option>
+					<option value="World Bank Income Groups Low income.xml">- Low income</option>
+				</select>
+
+				<label for="sankey-sex">Sex </label>
+				<select class="form-control" id="sankey-sex">
+					<option value='Both sexes' >Both sexes</option>
+					<option value='Female' checked>Female</option>
+					<option value='Male'>Male</option>
+				</select>
+
+				<label for="sankey-age">Age Group </label>
+				<select class="form-control" id="sankey-age">
+					<option value='All ages (total) years' checked>All ages (total) years</option>
+					<option disabled>Choose one sex to display:</option>
+					<option value='0-27 days'>0-27 days</option>
+					<option value='1-59 months'>1-59 months</option>
+					<option value='5-14 years'>5-14 years</option>
+					<option value='15-29 years'>15-29 years</option>
+					<option value='30-49 years'>30-49 years</option>
+					<option value='50-69 years'>50-69 years</option>
+					<option value='70+ years'>70+ years</option>
+
+				</select>
 			</div>
 
 			<div class="modal-footer">
@@ -518,8 +570,8 @@
 	<script src="js/otherThirdParty/bootstrap.min.js"></script>
 	<script src="js/otherThirdParty/queue.min.js"></script>
 
-	<script src="js/d3/d3.min.js"></script>
-	<!--<script src="js/d3/d3.js"></script>-->
+	<!--<script src="js/d3/d3.min.js"></script>-->
+	<script src="js/d3/d3.js"></script>
 	<script src="js/d3/d3.geo.projection.v0.min.js"></script>
 	<script src="js/d3/d3.tip.js"></script>
 	<script src="js/d3/d3.legend.js"></script>
