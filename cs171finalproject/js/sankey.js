@@ -100,7 +100,7 @@ function loadData() {
 
 
 
-            if (Object.keys(sankeyLookup).indexOf(d.dims.GHECAUSES) != -1){
+            if (Object.keys(sankeyLookup).indexOf(d.dims.GHECAUSES) != -1 && d.Value !=0){
                 graph.nodes.push({ "name": d.dims.GHECAUSES, "group": sankeyLookup[d.dims.GHECAUSES][1] });
                 graph.nodes.push({ "name": sankeyLookup[d.dims.GHECAUSES][0], "group": sankeyLookup[d.dims.GHECAUSES][1] });
                 graph.links.push({ "source": sankeyLookup[d.dims.GHECAUSES][0],
@@ -141,53 +141,6 @@ function loadData() {
         updateVisualization();
     });
 
-
-
-    /*
-     // load the data (using the timelyportfolio csv method)
-     d3.csv("world_by_cause_2012_paired.csv", function(error, data) {
-
-     console.log("csv-paired", data);
-
-     //set up graph in same style as original example but empty
-     graph = {"nodes" : [], "links" : []};
-
-     data.forEach(function (d) {
-     graph.nodes.push({ "name": d.source, "group": d.group });
-     graph.nodes.push({ "name": d.target, "group": d.group });
-     graph.links.push({ "source": d.source,
-     "target": d.target,
-     "group": d.group,
-     "value": +d.value });
-     });
-
-     colorRef = graph.nodes;
-
-     // return only the distinct / unique nodes
-     graph.nodes = d3.keys(d3.nest()
-     .key(function (d) { return d.name; })
-     .map(graph.nodes));
-
-     // loop through each link replacing the text with its index from node
-     graph.links.forEach(function (d, i) {
-     graph.links[i].source = graph.nodes.indexOf(graph.links[i].source);
-     graph.links[i].target = graph.nodes.indexOf(graph.links[i].target);
-     });
-
-     //now loop through each nodes to make nodes an array of objects
-     // rather than an array of strings
-     graph.nodes.forEach(function (d, i) {
-     graph.nodes[i] = { "name": d };
-     });
-
-     sankey
-     .nodes(graph.nodes)
-     .links(graph.links)
-     .layout(4);
-
-     updateVisualization();
-
-     }) */
 };
 
 
@@ -288,7 +241,7 @@ console.log(graph.links);
     node.append("text")
         //only display cause text for DALY > #
         .filter(function(d){
-            return d.value > d3.mean(graph.nodes, function(d) { return d.value; })/1.5;
+            return d.value > d3.mean(graph.nodes, function(d) { return d.value; })/1.65;
         })
         .attr("x", -6)
         .attr("y", function(d) {
