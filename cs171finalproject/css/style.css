@@ -136,9 +136,16 @@ li.key {
     color: #555;
     background-color: #e7e7e7;
 }
-@media (min-width: 1350px){
+
+@media (min-width: 1325px){
     .container {
         width: 1300px;
+    }
+}
+
+@media (max-width: 1325px){
+    #linegraph-wrapper{
+        height: 590px;
     }
 }
 
