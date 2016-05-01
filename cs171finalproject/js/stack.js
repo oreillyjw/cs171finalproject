@@ -149,7 +149,7 @@ StackedArea.prototype.initVis = function() {
     vis.stackYear = d3.select("#region-year").property("value");
     vis.stackData = d3.select("#region-data").property("value");
 
-    vis.margin = {top: 50, right: 30, bottom: 50, left: 30};
+    vis.margin = {top: 50, right: 50, bottom: 50, left: 50};
     vis.width = 1000 - vis.margin.left - vis.margin.right;
     vis.height = 500 - vis.margin.top - vis.margin.bottom;
 
@@ -182,6 +182,11 @@ StackedArea.prototype.initVis = function() {
     vis.c3 = d3.scale.ordinal()
         .domain(vis.cat3.reverse())
         .range(colorbrewer.Reds[9].slice(1,8));
+    // for three main categories
+    vis.c0 = d3.scale.ordinal()
+        //.domain(vis.lv1)
+        .domain(['Injuries', 'Noncommunicable diseases', 'Communicable & other Group I'])
+        .range(['#74c476','#6baed6', '#fb6a4a'].reverse());
 
 
     vis.stack = d3.layout.stack()
@@ -432,6 +437,18 @@ StackedArea.prototype.buildPaths = function() {
 
     l.exit().remove();
 
+    vis.legend = vis.svg.append("g")
+        .attr("class","legendOrdinal")
+        .attr("transform", "translate(" + (vis.width-vis.margin.right*2) + "," + (vis.height-vis.margin.bottom) + ")");
+
+    var legendOrdinal = d3.legend.color()
+        .shape("path", d3.svg.symbol().type("square").size(150)())
+        .shapePadding(2)
+        .scale(vis.c0);
+    
+    vis.svg.select(".legendOrdinal")
+        .style("font-size","12px")
+        .call(legendOrdinal);
 
     d3.select("#stack-chart")
         .on("mousemove", function(){  
@@ -442,6 +459,8 @@ StackedArea.prototype.buildPaths = function() {
             mousex = d3.mouse(this);
             mousex = mousex[0] + 5;
             vis.vertical.style("left", mousex + "px")});
+
+
 };
 
 var stackedArea = new StackedArea('stack-chart');

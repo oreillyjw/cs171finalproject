@@ -103,11 +103,6 @@
                     <option value='2012'>2012</option>
                 </select>
 
-                <label for="stack-type">Stack style </label>
-                <select class="form-control" id="stack-type">
-                    <option value="zero">Amount</option>
-                    <option value="expand">Percentage</option>
-                </select>
 
                 <label for="region-data">Data </label>
                 <select class="form-control" id="region-data">
@@ -126,15 +121,21 @@
                     <option value="World Bank Income Groups Low income.xml">- Low income</option>
                 </select>
 
+                <label for="stack-type">Stack style </label>
+                <select class="form-control" id="stack-type">
+                    <option value="zero">Amount</option>
+                    <option value="expand">Percentage</option>
+                </select>
 
-                <label for="sankey-sex">Sex </label>
+
+                <label for="sankey-sex">Sankey Sex </label>
                 <select class="form-control" id="sankey-sex">
                     <option value='Both sexes' checked >Both sexes</option>
                     <option value='Female' >Female</option>
                     <option value='Male'>Male</option>
                 </select>
 
-                <label for="sankey-age">Age Group </label>
+                <label for="sankey-age">Sankey Age Group </label>
                 <select class="form-control" id="sankey-age">
                     <option value='All ages (total) years' checked>All ages (total) years</option>
                     <option disabled>Choose one sex to display:</option>
@@ -169,6 +170,7 @@
 <script src="js/d3/d3.geo.projection.v0.min.js"></script>
 <script src="js/d3/d3.tip.js"></script>
 <script src="js/d3/d3.legend.js"></script>
+<script src="js/d3/d3.legend-color.js"></script>
 <script src="js/d3/d3.sankey.js"></script>
 
 <script src="js/otherThirdParty/topojson.js"></script>
