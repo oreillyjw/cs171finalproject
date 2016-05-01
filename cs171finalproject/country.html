@@ -230,6 +230,11 @@
 			</div>
 			<div class="modal-body">
 				<div class="input-group">
+					<div id="dalys-year-radio" class="btn-group" data-toggle="buttons">
+						<h5>Years Available:</h5>
+						<a href="#2000" class="btn btn-default active" data-toggle="tab"><input type="radio">2000</a>
+						<a href="#2012" class="btn btn-default" data-toggle="tab"><input type="radio">2012</a>
+					</div>
 					<h5>Select Info Type</h5>
 					<div class="radio">
 						<label><input type="radio" name="dalysType" value="all" checked=""><div class="typeText">All Causes (DALY)</div></label>
@@ -425,11 +430,6 @@
 						<option value="Zimbabwe"><div class="typeText">Zimbabwe</div></option>
 					</select>
 				</div>
-				<div id="dalys-year-radio" class="btn-group" data-toggle="buttons">
-					<h5>Years Available:</h5>
-					<a href="#2000" class="btn btn-default active" data-toggle="tab"><input type="radio">2000</a>
-					<a href="#2012" class="btn btn-default" data-toggle="tab"><input type="radio">2012</a>
-				</div>
 			</div>
 
 			<div class="modal-footer">
@@ -572,7 +572,6 @@
 
 	<script src="js/otherThirdParty/topojson.js"></script>
 	<script src="js/otherThirdParty/colorbrewer.js"></script>
-	<script src="js/otherThirdParty/highlight.min.js"></script>
 	<script src="js/otherThirdParty/fastselect.js"></script>
 	<script src="js/otherThirdParty/jquery-ui.js"></script>
 
@@ -580,8 +579,8 @@
 	<script src="js/choropleth.js"></script>
 	<script src="js/linegraphdalys.js"></script>
 	<script src="js/scatterplotmatrix.js"></script>
-	<script src="js/sankey.js"></script>
-	<script src="js/stack.js"></script>
+	<!--<script src="js/sankey.js"></script>-->
+	<!--<script src="js/stack.js"></script>-->
 
 </body>
 </html>
