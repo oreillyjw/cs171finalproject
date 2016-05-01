@@ -245,8 +245,11 @@ $("input[name='scatter-bursh']").on('click', function() {
 $("#page-radio > a").on('click', function(){
     var type = $(this).text();
     if( type === 'Region' ){
+
         $('.container[data-page="1"]').hide();
+
         $('.container[data-page="2"]').show();
+        stackedArea.updateVis();
     }else{
         $('.container[data-page="1"]').show();
         $('.container[data-page="2"]').hide();

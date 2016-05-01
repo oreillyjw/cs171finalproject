@@ -3,7 +3,7 @@
 // MIT licence
 
 (function() {
-    d3.legend = function(g) {
+    d3.legendthis = function(g) {
         g.each(function() {
             var g= d3.select(this),
                 items = {},

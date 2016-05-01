@@ -475,7 +475,6 @@ StackedArea.prototype.buildPaths = function() {
 };
 
 var stackedArea = new StackedArea('stack-chart');
-//$("#stack-type").on("change", function (d) {stackedArea.buildPaths();});
 $("#region-year").on("change", function (d) {stackedArea.updateVis();});
 $("#region-data").on("change", function (d) {stackedArea.updateVis();});
 $("#region-sex").on("change", function (d) {stackedArea.updateVis();});
@@ -487,7 +486,5 @@ for(var i = 0, max = radiostack.length; i < max; i++) {
     radiostack[i].onclick = function() {
         stackedArea.stackType = this.value;
         stackedArea.buildPaths();
-        //stackedArea.updateVis();
-        
     }
 };

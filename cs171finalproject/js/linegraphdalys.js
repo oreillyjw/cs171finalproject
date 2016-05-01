@@ -301,16 +301,16 @@ LineGraph.prototype.drawLegend = function() {
     var vis = this;
 
     $('.legend').remove();
-    legend = vis.svg.append("g")
+    legendthis = vis.svg.append("g")
         .attr("class","legend")
         .attr("transform","translate(62.5,366)")
         .style("font-size","12px")
-        .call(d3.legend);
+        .call(d3.legendthis);
 
-    legend
+    legendthis
         .style("font-size","15px")
         .attr("data-style-padding",15)
-        .call(d3.legend)
+        .call(d3.legendthis)
         .attr("x",0);
 };
 
