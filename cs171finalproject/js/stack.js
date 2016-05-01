@@ -149,6 +149,7 @@ StackedArea.prototype.initVis = function() {
     //vis.stackType = d3.select("#stack-type").property("value");
     vis.stackYear = d3.select("#region-year").property("value");
     vis.stackData = d3.select("#region-data").property("value");
+    vis.stackSex = d3.select("#region-sex").property("value");
 
     vis.margin = {top: 20, right: 50, bottom: 20, left: 50};
     vis.width = 1000 - vis.margin.left - vis.margin.right;
@@ -250,6 +251,7 @@ StackedArea.prototype.updateVis = function() {
     
     vis.stackYear = d3.select("#region-year").property("value");
     vis.stackData = d3.select("#region-data").property("value");
+    vis.stackSex = d3.select("#region-sex").property("value");
 
 
     d3.json('data/DALY_2000_2012/'+vis.stackData, function(data) {
@@ -326,7 +328,14 @@ StackedArea.prototype.updateVis = function() {
     for (i = 0; i < females.length; i++) { 
         females[i].dims.FEMALE = females[i].Value;
         females[i].dims.MALE = males[i].Value;
-        females[i].Value = females[i].dims.FEMALE + females[i].dims.MALE;
+        females[i].BOTH = females[i].dims.FEMALE + females[i].dims.MALE;
+        if (vis.stackSex == "Female") {
+            females[i].Value = females[i].dims.FEMALE;
+        } else if (vis.stackSex == "Male") {
+            females[i].Value = females[i].dims.MALE;
+        } else {
+            females[i].Value = females[i].dims.FEMALE + females[i].dims.MALE;
+        };
         delete females[i].dims.SEX;
         combined.push(females[i]);
     }
@@ -400,7 +409,7 @@ StackedArea.prototype.buildPaths = function() {
             .attr("stroke-width", "2px");
             vis.tooltip.html(
                 "<p><b>" + d.key + "</b><br>Age Group: " + age + "</p>" +
-                "<p>Cause DALY: " + addCommas(d.values[order].Value) + 
+                "<p>Cause DALY: " + addCommas(d.values[order].BOTH) + 
                 "<br>Female: " + addCommas(d.values[order].dims.FEMALE) + " (" + (d.values[order].dims.FEMALE/d.values[order].Value*100).toFixed(2) + "%)"+ 
                 "<br>Male: " + addCommas(d.values[order].dims.MALE) + " (" + (d.values[order].dims.MALE/d.values[order].Value*100).toFixed(2) + "%)"+ 
 
@@ -469,6 +478,8 @@ var stackedArea = new StackedArea('stack-chart');
 //$("#stack-type").on("change", function (d) {stackedArea.buildPaths();});
 $("#region-year").on("change", function (d) {stackedArea.updateVis();});
 $("#region-data").on("change", function (d) {stackedArea.updateVis();});
+$("#region-sex").on("change", function (d) {stackedArea.updateVis();});
+
 
 stackedArea.stackType = "zero";
 var radiostack = document.forms["stack-type"].elements["stack-type"];
