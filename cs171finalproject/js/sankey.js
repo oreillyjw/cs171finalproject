@@ -1,6 +1,6 @@
 
 
-var sankeySort='category';
+var sankeySort='amount';
 
 var radios = document.forms["sort-chooser"].elements["sort-chooser"];
 for(var i = 0, max = radios.length; i < max; i++) {
@@ -12,7 +12,7 @@ for(var i = 0, max = radios.length; i < max; i++) {
 }
 
 var margin = {top: 50, right: 50, bottom: 50, left: 50},
-    width = 800 - margin.left - margin.right,
+    width = 1000 - margin.left - margin.right,
     height = 800 - margin.top - margin.bottom;
 
 var formatNumber = d3.format(",.0f"),    // zero decimal places
@@ -86,7 +86,6 @@ function loadData() {
         });
 
         //filter facts
-        //TODO age & Sex filter does not work
         data.fact = data.fact.filter(function(d) {return +d.dims.YEAR == +sankeyYear;});
         data.fact = data.fact.filter(function(d) {
             if (d.dims.AGEGROUP == sankeyAge) {
@@ -165,13 +164,13 @@ function updateVisualization() {
         .links(graph.links)
         .layout(4);
 
-    console.log("214");
+    //console.log("214");
     d3.selectAll(".link")
         .data(graph.links)
         .exit()
         .remove();
-    console.log("220");
-console.log(graph.links);
+    //console.log("220");
+//console.log(graph.links);
 
     // add in the links
     link
@@ -196,7 +195,7 @@ console.log(graph.links);
         .sort(function(a, b) { return b.dy - a.dy; })
     ;
 
-    console.log("240");
+    //console.log("240");
 
     // add the link titles
     link.append("title")
@@ -238,11 +237,20 @@ console.log(graph.links);
         .text(function(d) {
             return d.name + "\n" + format(d.value); });
 
+    //fontScale = d3.scale.linear
+        //.domain([0, d3.max(vis.graphdata, function(d) { return d.y0 + d.y; })])
+        //.range(["#2ca02c", "#1f77b4", "#d62728"]);
+
+    //console.log("nodes", graph.nodes);
+    fontScale = d3.scale.linear()
+        .domain([d3.min(graph.nodes, function(d) { return d.value; }), d3.max(graph.nodes, function(d) { return d.value; })])
+        .range([8, 28]);
+
     // add in the title for the nodes
     node.append("text")
         //only display cause text for DALY > #
         .filter(function(d){
-            return d.value > d3.mean(graph.nodes, function(d) { return d.value; })/1.65;
+            return d.value > d3.mean(graph.nodes, function(d) { return d.value; })/3;
         })
         .attr("x", -6)
         .attr("y", function(d) {
@@ -252,7 +260,11 @@ console.log(graph.links);
         .attr("text-anchor", "end")
         .attr("transform", null)
         .text(function(d) { return d.name; })
-        .style("font-size","10px") //TODO: change font size based on node size
+        //.style("font-size","10px") //TODO: change font size based on node size
+        .style("font-size", function(d) {
+            //console.log("d",d.value);
+            return fontScale(d.value) + "px";
+        })
         .attr("font-family", "sans-serif")
         .filter(function(d) {
             return d.x < width / 3;

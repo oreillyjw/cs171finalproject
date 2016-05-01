@@ -186,7 +186,8 @@ StackedArea.prototype.initVis = function() {
     vis.c0 = d3.scale.ordinal()
         //.domain(vis.lv1)
         .domain(['Injuries', 'Noncommunicable diseases', 'Communicable & other Group I'])
-        .range(['#74c476','#6baed6', '#fb6a4a'].reverse());
+        .range(["#2ca02c", "#1f77b4", "#d62728"].reverse());
+        //.range(['#41ab5d','#2171b5', '#fb6a4a'].reverse());
 
 
     vis.stack = d3.layout.stack()
@@ -223,7 +224,7 @@ StackedArea.prototype.initVis = function() {
         .style("z-index", "20")
         .style("visibility", "hidden")
         .style("top", "150px")
-        .style("left", vis.width + "px");
+        .style("left", vis.width-vis.margin.right+10 + "px");
 
     vis.vertical = d3.select("#stack-chart")
         .append("div")
@@ -443,7 +444,7 @@ StackedArea.prototype.buildPaths = function() {
 
     var legendOrdinal = d3.legend.color()
         .shape("path", d3.svg.symbol().type("square").size(150)())
-        .shapePadding(2)
+        .shapePadding(1)
         .scale(vis.c0);
     
     vis.svg.select(".legendOrdinal")
