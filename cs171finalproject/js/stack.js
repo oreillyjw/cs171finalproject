@@ -410,8 +410,8 @@ StackedArea.prototype.buildPaths = function() {
             vis.tooltip.html(
                 "<p><b>" + d.key + "</b><br>Age Group: " + age + "</p>" +
                 "<p>Cause DALY: " + addCommas(d.values[order].BOTH) + 
-                "<br>Female: " + addCommas(d.values[order].dims.FEMALE) + " (" + (d.values[order].dims.FEMALE/d.values[order].Value*100).toFixed(2) + "%)"+ 
-                "<br>Male: " + addCommas(d.values[order].dims.MALE) + " (" + (d.values[order].dims.MALE/d.values[order].Value*100).toFixed(2) + "%)"+ 
+                "<br>Female: " + addCommas(d.values[order].dims.FEMALE) + " (" + (d.values[order].dims.FEMALE/d.values[order].Value*100).toFixed(1) + "%)"+ 
+                "<br>Male: " + addCommas(d.values[order].dims.MALE) + " (" + (d.values[order].dims.MALE/d.values[order].Value*100).toFixed(1) + "%)"+ 
 
                 "</p>"
             ).style("visibility", "visible");
