@@ -4,6 +4,7 @@ d3.select("#stack-type").on("change", function (d) {
     updateVisualization();
 });*/
 
+
 StackedArea = function(_parentElement){
     this.parentElement = _parentElement;
 
@@ -145,13 +146,13 @@ StackedArea.prototype.initVis = function() {
     var vis = this;
 
     //listen to user input
-    vis.stackType = d3.select("#stack-type").property("value");
+    //vis.stackType = d3.select("#stack-type").property("value");
     vis.stackYear = d3.select("#region-year").property("value");
     vis.stackData = d3.select("#region-data").property("value");
 
-    vis.margin = {top: 50, right: 50, bottom: 50, left: 50};
+    vis.margin = {top: 20, right: 50, bottom: 20, left: 50};
     vis.width = 1000 - vis.margin.left - vis.margin.right;
-    vis.height = 500 - vis.margin.top - vis.margin.bottom;
+    vis.height = 400 - vis.margin.top - vis.margin.bottom;
 
     vis.x = d3.scale.ordinal().rangeBands([0, vis.width]);
     vis.y = d3.scale.linear().range([vis.height, 0]);
@@ -170,8 +171,6 @@ StackedArea.prototype.initVis = function() {
                 return d3.format(".0%")(d);
             }
         });
-
-    //listen to user input
 
     vis.c1 = d3.scale.ordinal()
         .domain(vis.cat1.reverse())
@@ -244,6 +243,8 @@ StackedArea.prototype.initVis = function() {
 };
 
 StackedArea.prototype.updateVis = function() {
+
+    console.log("in update vis", this);
 
     var vis = this;
     
@@ -340,7 +341,7 @@ StackedArea.prototype.updateVis = function() {
 StackedArea.prototype.buildPaths = function() {
 
     var vis = this;
-    vis.stackType = d3.select("#stack-type").property("value");
+    //vis.stackType = d3.select("#stack-type").property("value");
 
     vis.stack.offset(vis.stackType);
     var layers = vis.stack(vis.nest.entries(vis.graphdata));
@@ -440,7 +441,7 @@ StackedArea.prototype.buildPaths = function() {
 
     vis.legend = vis.svg.append("g")
         .attr("class","legendOrdinal")
-        .attr("transform", "translate(" + (vis.width-vis.margin.right*2) + "," + (vis.height-vis.margin.bottom) + ")");
+        .attr("transform", "translate(" + (vis.width-vis.margin.right*2) + "," + (vis.height*.9) + ")");
 
     var legendOrdinal = d3.legend.color()
         .shape("path", d3.svg.symbol().type("square").size(150)())
@@ -465,6 +466,17 @@ StackedArea.prototype.buildPaths = function() {
 };
 
 var stackedArea = new StackedArea('stack-chart');
-$("#stack-type").on("change", function (d) {stackedArea.buildPaths();});
+//$("#stack-type").on("change", function (d) {stackedArea.buildPaths();});
 $("#region-year").on("change", function (d) {stackedArea.updateVis();});
 $("#region-data").on("change", function (d) {stackedArea.updateVis();});
+
+stackedArea.stackType = "zero";
+var radiostack = document.forms["stack-type"].elements["stack-type"];
+for(var i = 0, max = radiostack.length; i < max; i++) {
+    radiostack[i].onclick = function() {
+        stackedArea.stackType = this.value;
+        stackedArea.buildPaths();
+        //stackedArea.updateVis();
+        
+    }
+};

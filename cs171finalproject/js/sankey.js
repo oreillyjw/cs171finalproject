@@ -11,9 +11,9 @@ for(var i = 0, max = radios.length; i < max; i++) {
     }
 }
 
-var margin = {top: 50, right: 50, bottom: 50, left: 50},
+var margin = {top: 20, right: 50, bottom: 0, left: 50},
     width = 1000 - margin.left - margin.right,
-    height = 800 - margin.top - margin.bottom;
+    height = 600 - margin.top - margin.bottom;
 
 var formatNumber = d3.format(",.0f"),    // zero decimal places
     format = function(d) { return formatNumber(d); },
@@ -44,13 +44,13 @@ var sankeyLookup;
 var sankeyYear = d3.select("#region-year").property("value");
 var sankeyData = d3.select("#region-data").property("value");
 var sankeyAge = d3.select("#sankey-age").property("value");
-var sankeySex = d3.select("#sankey-sex").property("value");
+var sankeySex = d3.select("#region-sex").property("value");
 
 
 d3.select("#region-year").on("change", function (d) {loadData();});
 d3.select("#region-data").on("change", function (d) {loadData();});
 d3.select("#sankey-age").on("change", function (d) {loadData();});
-d3.select("#sankey-sex").on("change", function (d) {loadData();});
+d3.select("#region-sex").on("change", function (d) {loadData();});
 
 
 var link = sankey_svg_1.append("g")
@@ -62,8 +62,8 @@ function loadData() {
     sankeyYear = d3.select("#region-year").property("value");
     sankeyData = d3.select("#region-data").property("value");
     sankeyAge = d3.select("#sankey-age").property("value");
-    sankeySex = d3.select("#sankey-sex").property("value");
-    sankeySex = 'Female';
+    sankeySex = d3.select("#region-sex").property("value");
+    //sankeySex = 'Female';
     console.log(sankeySex);
     //lookup table
 
@@ -244,7 +244,7 @@ function updateVisualization() {
     //console.log("nodes", graph.nodes);
     fontScale = d3.scale.linear()
         .domain([d3.min(graph.nodes, function(d) { return d.value; }), d3.max(graph.nodes, function(d) { return d.value; })])
-        .range([8, 28]);
+        .range([7, 30]);
 
     // add in the title for the nodes
     node.append("text")
@@ -260,12 +260,12 @@ function updateVisualization() {
         .attr("text-anchor", "end")
         .attr("transform", null)
         .text(function(d) { return d.name; })
-        //.style("font-size","10px") //TODO: change font size based on node size
-        .style("font-size", function(d) {
-            //console.log("d",d.value);
-            return fontScale(d.value) + "px";
-        })
+        //.style("font-size","10px")
+        .style("font-size", function(d) {return fontScale(d.value) + "px";})
+        .style("font-weight", "600")
+        .style("-webkit-text-stroke", "3px white")
         .attr("font-family", "sans-serif")
+        //.attr("font-styl", "Tahoma")
         .filter(function(d) {
             return d.x < width / 3;
         })
