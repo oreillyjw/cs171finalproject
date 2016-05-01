@@ -11,7 +11,7 @@ for(var i = 0, max = radios.length; i < max; i++) {
     }
 }
 
-var margin = {top: 50, right: 10, bottom: 50, left: 10},
+var margin = {top: 50, right: 30, bottom: 50, left: 30},
     width = 800 - margin.left - margin.right,
     height = 800 - margin.top - margin.bottom;
 
@@ -25,7 +25,7 @@ var sankey_svg_1 = d3.select("#sankey-chart").append("svg")
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform",
-        "translate(" + margin.left + "," + (-20) + ")");
+        "translate(" + margin.left + "," + (-0) + ")");
 
 // Set the sankey diagram properties
 var sankey = d3.sankey()
@@ -41,16 +41,17 @@ var colorRef;
 var sankeyLookup;
 
 //listen to user input
-var sankeyYear = d3.select("#sankey-year").property("value");
-var sankeyData = d3.select("#sankey-data").property("value");
+var sankeyYear = d3.select("#region-year").property("value");
+var sankeyData = d3.select("#region-data").property("value");
 var sankeyAge = d3.select("#sankey-age").property("value");
 var sankeySex = d3.select("#sankey-sex").property("value");
 
 
+d3.select("#region-year").on("change", function (d) {loadData();});
+d3.select("#region-data").on("change", function (d) {loadData();});
 d3.select("#sankey-age").on("change", function (d) {loadData();});
 d3.select("#sankey-sex").on("change", function (d) {loadData();});
-d3.select("#sankey-year").on("change", function (d) {loadData();});
-d3.select("#sankey-data").on("change", function (d) {loadData();});
+
 
 var link = sankey_svg_1.append("g")
     .selectAll(".link");
@@ -58,8 +59,8 @@ var link = sankey_svg_1.append("g")
 loadData();
 
 function loadData() {
-    sankeyYear = d3.select("#sankey-year").property("value");
-    sankeyData = d3.select("#sankey-data").property("value");
+    sankeyYear = d3.select("#region-year").property("value");
+    sankeyData = d3.select("#region-data").property("value");
     sankeyAge = d3.select("#sankey-age").property("value");
     sankeySex = d3.select("#sankey-sex").property("value");
     sankeySex = 'Female';
@@ -67,7 +68,7 @@ function loadData() {
     //lookup table
 
     var lookup = {};
-    d3.csv("data/world_by_cause_2012_paired.csv", function(error, data) {
+    d3.csv("data/sankey_lookup.csv", function(error, data) {
         data.forEach(function (d) {lookup[d.target] = [d.source, d.group];});
         sankeyLookup = lookup;
     });
@@ -189,7 +190,7 @@ console.log(graph.links);
             d.color = color2(colorlookup(d.group, colorRef));
             return d3.rgb(d.color);
         })
-        .style("opacity", 0.3)
+        .style("opacity", 0.4)
         //.style("stroke-opacity", 0.3)
         //.style("fill-opacity", 0.3)
         .sort(function(a, b) { return b.dy - a.dy; })

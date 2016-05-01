@@ -146,10 +146,10 @@ StackedArea.prototype.initVis = function() {
 
     //listen to user input
     vis.stackType = d3.select("#stack-type").property("value");
-    vis.stackYear = d3.select("#stack-year").property("value");
-    vis.stackData = d3.select("#stack-data").property("value");
+    vis.stackYear = d3.select("#region-year").property("value");
+    vis.stackData = d3.select("#region-data").property("value");
 
-    vis.margin = {top: 20, right: 30, bottom: 30, left: 50};
+    vis.margin = {top: 50, right: 30, bottom: 50, left: 30};
     vis.width = 1000 - vis.margin.left - vis.margin.right;
     vis.height = 500 - vis.margin.top - vis.margin.bottom;
 
@@ -241,8 +241,8 @@ StackedArea.prototype.updateVis = function() {
 
     var vis = this;
     
-    vis.stackYear = d3.select("#stack-year").property("value");
-    vis.stackData = d3.select("#stack-data").property("value");
+    vis.stackYear = d3.select("#region-year").property("value");
+    vis.stackData = d3.select("#region-data").property("value");
 
 
     d3.json('data/DALY_2000_2012/'+vis.stackData, function(data) {
@@ -446,5 +446,5 @@ StackedArea.prototype.buildPaths = function() {
 
 var stackedArea = new StackedArea('stack-chart');
 $("#stack-type").on("change", function (d) {stackedArea.buildPaths();});
-$("#stack-year").on("change", function (d) {stackedArea.updateVis();});
-$("#stack-data").on("change", function (d) {stackedArea.updateVis();});
+$("#region-year").on("change", function (d) {stackedArea.updateVis();});
+$("#region-data").on("change", function (d) {stackedArea.updateVis();});
