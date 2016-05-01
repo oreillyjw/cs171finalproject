@@ -382,4 +382,7 @@ ScatterMatrix.prototype.brushend = function(vis) {
 ScatterMatrix.prototype.resetSelection = function(){
     var vis = this;
     vis.svg.selectAll(".hidden").classed("hidden", false);
+    if ( vis.brush ){
+        vis.brush.clear();
+    }
 };

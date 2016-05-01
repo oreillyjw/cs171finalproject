@@ -42,7 +42,7 @@
                 })
                 .on('mouseout', function(d){
                     $("." + dalysMappingTitles[d.key]).attr("class", "linetype "+ dalysMappingTitles[d.key]);
-                });;
+                });
 
             li.selectAll("circle")
                 .data(items,function(d) { return d.key})

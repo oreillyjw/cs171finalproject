@@ -41,6 +41,7 @@
 	<div class="row">
 		<div class="col-lg-12 col-md-12 col-xs-12">
 			<div class="checkbox" style="text-align: center">
+				<div style="font-size: 16px;">View How DALYs Effect: </div>
 				<div id="page-radio" class="btn-group" data-toggle="buttons" style="text-align: center;">
 					<a href="#page-1" class="btn btn-default active" data-toggle="tab"><input type="radio">Country</a>
 					<a href="#page-2" class="btn btn-default" data-toggle="tab"><input type="radio">Region</a>
@@ -63,12 +64,18 @@
 							<span class="input-group-btn" >
 								<button class="btn btn-default" type="button" style="margin-top:4px;"><i class="fa fa-search btn" aria-hidden="true"></i></button>
 							</span>
+
 					</div><!-- /input-group -->
+					<div class="search-country-not-found" style="font-size: 14px; display:none; color: red;">
+						Country not found, Please search for another country
+					</div>
 				</div><!-- /.col-lg-6 -->
 			</div><!-- /.row -->
 		</div>
-		<div class="col-lg-2 col-md-2 col-xs-2" style="padding-right: 0;">
-			<button type="button" class="btn btn-default filters" data-toggle="modal" data-target="#filterModal"style="margin-top:4px;">Filters</button>
+		<div class="col-lg-2 col-md-2 col-xs-2" style="padding-right: 0; padding-left: 0">
+			<button type="button" class="btn btn-default filters" data-toggle="modal" data-target="#filterModal"style="margin-top:4px;">
+				Change Filters
+			</button>
 			<div style="display: inline; float: right; font-size: 14px; margin-top: 15px;">Applied Filters:</div>
 		</div>
 		<div class="col-lg-6 col-md-6 col-xs-6" style="padding-left: 0;">
@@ -76,8 +83,14 @@
 				<div class=" panel panel-default applied-filters">
 					<div class="panel-body">
 						<div class="row">
-							<div class="col-lg-3"><div class="daly-year"></div></div>
+							<div class="col-lg-2"><div class="daly-year"></div></div>
 							<div class="col-lg-8"><div class="daly-type"></div></div>
+							<div class="col-lg-2">
+								<button type="button" class="btn btn-danger reset-filters-country"
+										style="margin: 0 0 0 -25px; line-height: 0; padding: 8px;">
+									Reset Filters
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -147,12 +160,16 @@
 	</div>
 	<div class="row">
 		<div class="col-lg-12 col-md-12 col-xs-12">
+			<div style="text-align: center; font-size: 14px;">
+				To get more detail around the outliers, hover over or click the points of interest.
+				Additionally, you can drag and select an area of points to see where they correspond in other areas.
+			</div>
 			<div class="checkbox" style="text-align: center">
 				<label style="font-size: 14px;">
 					<input name="scatter-bursh" type="checkbox" value="1" style="margin-top:3px;">Select Area
 				</label>
 				<div class="reset-button" style="margin-top: 0">
-					<button type="button" class="btn btn-danger">Reset Matrix</button>
+					<button type="button" class="btn btn-danger">Reset All Scatter Plots</button>
 				</div>
 			</div>
 		</div>
@@ -194,28 +211,67 @@
 				<h4 class="modal-title">About Disability-Adjusted Life Years (DALY)</h4>
 			</div>
 			<div class="modal-body active modal-1">
-				<p>To measure the burden of disease, the World Health Organization (WHO) calculates a metric called
-					disability-adjusted life year (DALY). DALY is expressed as the sum of the number of the years
-					lived with disability (YLD) and the number of years lost (YLL). DALY is a highly valuable metric
-					for understanding public health status, it represents “…the gap between current health status and
-					an ideal health situation”.</p>
+				<div class="modal-content-para">
+					As the years tick by, the majority of people find themselves affected by disability, disease, or injury.
+					The time spent living with these burdens combined with time of life lost come together to form a metric
+					called Disability Adjusted Life Year (DALY). This measure was formed in the 1990s as a mechanism to easily
+					draw comparisons on a country-by-country basis. Now, with all of the information available,
+					it can be sliced and diced in a variety of ways to observe trends and gain actionable insights.
+				</div>
+				<br>
+				<div class="modal-content-para">
+					From birth until life-impacting disease is considered “healthy life.” It is acknowledged that
+					throughout this healthy period, there will be some brief stints of illness, but nothing severely
+					debilitating. This is a part of DALY, but it is not counted in the calculation.
+				</div>
 			</div>
 			<div class="modal-body modal-2" style="display: none">
-				<p>
-					It needs be noted that the word “disability” here does not only refer to the physical or mental
-					handicap like blindness that people commonly think, but a much wider range of causes that
-					negatively impacts the people’s quality of life, including sickness and injury.
-				</p>
+				<div class="modal-content-para">
+					After disability or disease take their toll, the next phase of life is considered,
+					“Years Lived with Disability” (YLD). Disability goes beyond traditional views;
+					rather, in the context of DALYs, it can be any disease, illness, disability, or injury
+					that reduces a person’s quality of life. It is a life event that severely impacts and
+					changes not only the day-to-day, but can change their life expectancy.
+				</div>
 			</div>
 			<div class="modal-body modal-3" style="display: none">
-				<p>
-					Our project aims to learn how diseases and disabilities have impacted the world by creating effective DALY data visualization.
-				</p>
-				<button type="button" data-dismiss="modal" class="btn">Close</button>
+				<div class="modal-content-para">
+					The final piece of the DALY metric is “years of life lost” (YLL). Early death is an unfortunate
+					result of YLD, and the years lost are what is taken from what should have been the person’s
+					true life expectancy. YLD + YLL = DALY.
+				</div>
+				<br>
+				<div class="modal-content-para" style="padding:0; text-indent: 0;">
+					Click the Close button to learn more about DALYs.
+				</div>
 			</div>
+			<div class="modal-body">
+				<div class="gauge-wrapper">
+					<div class="gauge1">
+						<div class="box-wrap">
+							<div class="box2" style="border: 35px solid lightgoldenrodyellow; z-index:10;"></div>
+						</div>
+					</div>
+
+					<div class="gauge1">
+						<div class="box-wrap">
+							<div class="box1" style="border: 35px solid orange; z-index:10;"></div>
+						</div>
+					</div>
+
+					<div class="gauge1">
+						<div class="box-wrap">
+							<div class="box" style="z-index:15"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default btn-prev">Previous</button>
 				<button type="button" class="btn btn-primary btn-next">Next</button>
+				<button type="button" data-dismiss="modal" class="btn btn-dismiss" style="float: right">Close</button>
+
 			</div>
 		</div>
 	</div>

@@ -29,6 +29,46 @@ rect {
     font-size: 20px;
 
 }
+
+.gauge-wrapper {
+    position: relative;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    height: 120px;
+    text-align: center;
+}
+
+.gauge1 {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 200px;
+    height: 200px;
+}
+
+.box-wrap {
+    height: 113px;
+    width: 226px;
+    overflow: hidden;
+    position: relative;
+    left: 75%;
+}
+
+.box, .box1, .box2 {
+    transition: 1s all;
+    top: 26px;
+    left: 0px;
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border: 35px solid #2f87c3;
+    border-radius: 50%;
+    clip: rect(0, 300px, 113px, 0px);
+    -webkit-transform: rotate(-180deg);
+}
+
 /*
  Graph css
 */
@@ -165,8 +205,13 @@ body{
     margin-top: 2px;
 }
 
+.modal-content-para{
+    font-size: 14px;
+    padding-left: 0em;
+    text-indent: 2em;
+}
 
-    /*********************/
+/*********************/
 /*  TOOLTIP OVERLAY  */
 /*********************/
 

@@ -61,25 +61,59 @@
                 <h4 class="modal-title">About Disability-Adjusted Life Years (DALY)</h4>
             </div>
             <div class="modal-body active modal-1">
-                <p>To measure the burden of disease, the World Health Organization (WHO) calculates a metric called
-                    disability-adjusted life year (DALY). DALY is expressed as the sum of the number of the years
-                    lived with disability (YLD) and the number of years lost (YLL). DALY is a highly valuable metric
-                    for understanding public health status, it represents “…the gap between current health status and
-                    an ideal health situation”.</p>
+                <div class="modal-content-para">
+                    As the years tick by, the majority of people find themselves affected by disability, disease, or injury.
+                    The time spent living with these burdens combined with time of life lost come together to form a metric
+                    called Disability Adjusted Life Year (DALY). This measure was formed in the 1990s as a mechanism to easily
+                    draw comparisons on a country-by-country basis. Now, with all of the information available,
+                    it can be sliced and diced in a variety of ways to observe trends and gain actionable insights.
+                </div>
+                <br>
+                <div class="modal-content-para">
+                    From birth until life-impacting disease is considered “healthy life.” It is acknowledged that
+                    throughout this healthy period, there will be some brief stints of illness, but nothing severely
+                    debilitating. This is a part of DALY, but it is not counted in the calculation.
+                </div>
             </div>
             <div class="modal-body modal-2" style="display: none">
-                <p>
-                    It needs be noted that the word “disability” here does not only refer to the physical or mental
-                    handicap like blindness that people commonly think, but a much wider range of causes that
-                    negatively impacts the people’s quality of life, including sickness and injury.
-                </p>
+                <div class="modal-content-para">
+                    After disability or disease take their toll, the next phase of life is considered,
+                    “Years Lived with Disability” (YLD). Disability goes beyond traditional views;
+                    rather, in the context of DALYs, it can be any disease, illness, disability, or injury
+                    that reduces a person’s quality of life. It is a life event that severely impacts and
+                    changes not only the day-to-day, but can change their life expectancy.
+                </div>
             </div>
             <div class="modal-body modal-3" style="display: none">
-                <p>
-                    Our project aims to learn how diseases and disabilities have impacted the world by creating effective DALY data visualization.
-                </p>
-                <button type="button" data-dismiss="modal" class="btn">Close</button>
+                <div class="modal-content-para">
+                    The final piece of the DALY metric is “years of life lost” (YLL). Early death is an unfortunate
+                    result of YLD, and the years lost are what is taken from what should have been the person’s
+                    true life expectancy. YLD + YLL = DALY.
+                </div>
+                <button type="button" data-dismiss="modal" class="btn" style="float: right">Close</button>
             </div>
+            <div class="modal-body">
+                <div class="gauge-wrapper">
+                    <div class="gauge1">
+                        <div class="box-wrap">
+                            <div class="box2" style="border: 35px solid lightgoldenrodyellow; z-index:10;"></div>
+                        </div>
+                    </div>
+
+                    <div class="gauge1">
+                        <div class="box-wrap">
+                            <div class="box1" style="border: 35px solid orange; z-index:10;"></div>
+                        </div>
+                    </div>
+
+                    <div class="gauge1">
+                        <div class="box-wrap">
+                            <div class="box" style="z-index:15"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-default btn-prev">Previous</button>
                 <button type="button" class="btn btn-primary btn-next">Next</button>
@@ -105,6 +139,56 @@
 <script src="js/otherThirdParty/highlight.min.js"></script>
 <script src="js/otherThirdParty/fastselect.js"></script>
 <script src="js/otherThirdParty/jquery-ui.js"></script>
+
+<style>
+
+    .page-wrap {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+    }
+
+    .gauge-wrapper {
+        position: relative;
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translateZ(0);
+        -webkit-backface-visibility: hidden;
+        -webkit-perspective: 1000;
+        backface-visibility: hidden;
+        perspective: 1000;
+        height: 120px;
+        text-align: center;
+    }
+
+    .gauge1 {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 200px;
+        height: 200px;
+    }
+
+    .box-wrap {
+        height: 113px;
+        width: 226px;
+        overflow: hidden;
+        position: relative;
+        left: 75%;
+    }
+
+    .box, .box1, .box2 {
+        transition: 1s all;
+        top: 26px;
+        left: 0px;
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        border: 35px solid #2f87c3;
+        border-radius: 50%;
+        clip: rect(0, 300px, 113px, 0px);
+        -webkit-transform: rotate(-180deg);
+    }
+</style>
 
 <script>
     $("#infoModal").modal('show');
@@ -132,7 +216,42 @@
             $('.modal-body.active').removeClass('active').hide();
             $('.modal-body.modal-'+ currentNum).addClass('active').show();
         }
+
+        changeCircle(currentNum);
     });
+
+
+    /*
+     modified from http://codepen.io/vistar/pen/JdVzor
+     */
+    var changeCircle = function(stage){
+
+        var deg = -88,
+                deg2 = deg;
+        if(stage >= 2){
+            deg2 = -55;
+        }
+        var deg3 = deg2;
+        if( stage >= 3){
+            deg3 = 0;
+        }
+
+        $('.box2').css('-webkit-transform', 'rotate(' + deg3   +'deg)')
+                .css('-moz-transform', 'rotate(' + deg3   +'deg)')
+                .css('-ms-transform', 'rotate(' + deg3   +'deg)');
+
+        $('.box1').css('-webkit-transform', 'rotate(' + deg2   +'deg)')
+                .css('-moz-transform', 'rotate(' + deg2   +'deg)')
+                .css('-ms-transform', 'rotate(' + deg2   +'deg)');
+
+        $('.box').css('-webkit-transform', 'rotate(' + deg   +'deg)')
+                .css('-moz-transform', 'rotate(' + deg   +'deg)')
+                .css('-ms-transform', 'rotate(' + deg   +'deg)');
+
+    };
+
+    changeCircle(1);
+
 
 </script>
 

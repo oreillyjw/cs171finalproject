@@ -155,7 +155,10 @@ function loadData(){
                         'communicable':  d['Communicable & other Group I'] = +d['Communicable & other Group I'],
                         'injuries':  d['Injuries'] = +d['Injuries'],
                         'noncommunicable': d['Noncommunicable diseases'] = +d['Noncommunicable diseases'],
-                        'lifeexpectancy' :  d['Life Expectancy']
+                        'lifeexpectancy' :  d['Life Expectancy'],
+                        'tepgdp': d['Total expenditure on health as a percentage of gross domestic product'],
+
+
                     };
 
                 });
@@ -280,7 +283,56 @@ $('.modal-footer > .btn').on('click', function(){
         $('.modal-body.active').removeClass('active').hide();
         $('.modal-body.modal-'+ currentNum).addClass('active').show();
     }
+
+    changeCircle(currentNum);
 });
+
+
+/*
+ modified from http://codepen.io/vistar/pen/JdVzor
+ */
+var changeCircle = function(stage){
+
+    var deg = -88,
+        deg2 = deg;
+    if(stage >= 1){
+        $("#infoModal .btn-prev").hide();
+        $("#infoModal .btn-next").show();
+        $("#infoModal .btn-dismiss").hide();
+    }
+
+    if(stage >= 2){
+        deg2 = -55;
+        $("#infoModal .btn-prev").show();
+        $("#infoModal .btn-next").show();
+        $("#infoModal .btn-dismiss").hide();
+
+    }
+    var deg3 = deg2;
+    if( stage >= 3){
+        deg3 = 0;
+        $("#infoModal .btn-prev").show();
+        $("#infoModal .btn-next").hide();
+        $("#infoModal .btn-dismiss").show();
+
+    }
+
+    $('.box2').css('-webkit-transform', 'rotate(' + deg3   +'deg)')
+        .css('-moz-transform', 'rotate(' + deg3   +'deg)')
+        .css('-ms-transform', 'rotate(' + deg3   +'deg)');
+
+    $('.box1').css('-webkit-transform', 'rotate(' + deg2   +'deg)')
+        .css('-moz-transform', 'rotate(' + deg2   +'deg)')
+        .css('-ms-transform', 'rotate(' + deg2   +'deg)');
+
+    $('.box').css('-webkit-transform', 'rotate(' + deg   +'deg)')
+        .css('-moz-transform', 'rotate(' + deg   +'deg)')
+        .css('-ms-transform', 'rotate(' + deg   +'deg)');
+
+};
+
+changeCircle(1);
+
 
 $('.reset-button > .btn.btn-danger').on('click', function(){
     choroplethMap.reset()
@@ -469,7 +521,12 @@ $(function() {
 $( "#country-search-box" ).submit(function( event ) {
     event.preventDefault();
     var country = $('#country').val().replace(/[^a-z]/gi, '').toLowerCase();
-    $('#map .'+country).d3Click();
+    if ( $('#map .'+country).val() !== undefined ){
+        $('.search-country-not-found').hide();
+        $('#map .'+country).d3Click();
+    }else{
+        $('.search-country-not-found').show();
+    }
 });
 
 $('.fa.fa-search').on('click', function(){
@@ -486,4 +543,18 @@ jQuery.fn.d3Click = function () {
         e.dispatchEvent(evt);
     });
 };
+
+$('.reset-filters-country').on('click', function(){
+    $("input[name='dalysType'][value='all']").prop("checked", true).click();
+    $('.fstChoiceRemove').each(function(i,d){
+        $(d).click();
+    });
+    $('button[name="apply-dalys"]').click();
+    $('div.reset-button > button').click();
+    lineGraph.country = "World";
+    $('.linetype').remove();
+    lineGraph.wrangleData();
+
+});
+
 
