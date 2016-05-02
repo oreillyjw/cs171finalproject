@@ -255,7 +255,7 @@ function updateVisualization() {
     //console.log("nodes", graph.nodes);
     fontScale = d3.scale.linear()
         .domain([d3.min(graph.nodes, function(d) { return d.value; }), d3.max(graph.nodes, function(d) { return d.value; })])
-        .range([7, 30]);
+        .range([7, 28]);
 
     // add in the title for the nodes
     node.append("text")

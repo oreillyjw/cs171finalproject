@@ -42,7 +42,8 @@
 	<div class="row">
 		<div class="col-lg-12 col-md-12 col-xs-12">
 			<div class="checkbox" style="text-align: center">
-				<div style="font-size: 16px;">View How DALYs Effect: </div>
+				<div style="font-size: 16px;">View the DALYs data by: </div>
+				<br/>
 				<div id="page-radio" class="btn-group" data-toggle="buttons" style="text-align: center;">
 					<a href="#page-1" class="btn btn-default active" data-toggle="tab"><input type="radio">Country</a>
 					<a href="#page-2" class="btn btn-default" data-toggle="tab"><input type="radio">Region/Income Group</a>
@@ -185,6 +186,7 @@
 </div>
 
 <!--  Page 2 of the entire website -->
+<h6>
 <div class="container" data-page="2" style="display: none;">
 	<div class="row">
 		<div class="col-lg-10 col-md-10 col-xs-12" style="padding-right: 0;">
@@ -232,7 +234,7 @@
 			</select>
 		</div>
 		<div class="col-lg-2 col-md-2 col-xs-2" style="padding-right: 0;">
-			<label for="sankey-age">Age Group (↓ only) </label>
+			<label for="sankey-age">Age Group (↓ Specific sex only) </label>
 			<select class="form-control" id="sankey-age" disabled>
 				<option value='All ages (total) years' checked>All ages</option>
 				<option disabled>Choose one sex to display:</option>
@@ -268,6 +270,7 @@
 		</div>
 	</div>
 </div>
+</h6>
 
 
 <!--Information Modal HTML -->
