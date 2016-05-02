@@ -245,7 +245,7 @@ StackedArea.prototype.initVis = function() {
 
 StackedArea.prototype.updateVis = function() {
 
-    console.log("in update vis", this);
+    //console.log("in update vis", this);
 
     var vis = this;
     

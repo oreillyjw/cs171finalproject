@@ -49,8 +49,18 @@ var sankeySex = d3.select("#region-sex").property("value");
 
 d3.select("#region-year").on("change", function (d) {loadData();});
 d3.select("#region-data").on("change", function (d) {loadData();});
-d3.select("#sankey-age").on("change", function (d) {loadData();});
-d3.select("#region-sex").on("change", function (d) {loadData();});
+d3.select("#sankey-age").on("change", function (d) {
+    loadData();
+});
+d3.select("#region-sex").on("change", function (d) {
+    if( $("#region-sex").val() === "Both sexes"){
+        $("#sankey-age").val("All ages (total) years");
+        $('#sankey-age').prop("disabled", true);
+    }else{
+        $('#sankey-age').prop("disabled", false);
+    }
+    loadData();
+});
 
 
 var link = sankey_svg_1.append("g")
@@ -64,7 +74,7 @@ function loadData() {
     sankeyAge = d3.select("#sankey-age").property("value");
     sankeySex = d3.select("#region-sex").property("value");
     //sankeySex = 'Female';
-    console.log(sankeySex);
+    //console.log(sankeySex);
     //lookup table
 
     var lookup = {};
@@ -89,12 +99,13 @@ function loadData() {
         data.fact = data.fact.filter(function(d) {return +d.dims.YEAR == +sankeyYear;});
         data.fact = data.fact.filter(function(d) {
             if (d.dims.AGEGROUP == sankeyAge) {
-                console.log(d.dims.AGEGROUP, sankeyAge)}
+                //console.log(d.dims.AGEGROUP, sankeyAge)
+            }
             return d.dims.AGEGROUP == sankeyAge;
         });
         data.fact = data.fact.filter(function(d) {return d.dims.SEX == sankeySex;});
 
-        console.log("json", data.fact);
+        //console.log("json", data.fact);
         graph = {"nodes" : [], "links" : []};
         data.fact.forEach(function (d) {
 
@@ -146,7 +157,7 @@ function loadData() {
 
 function updateVisualization() {
 
-    console.log("graph", graph);
+    //console.log("graph", graph);
     d3.selectAll(".link").remove();
     d3.selectAll(".node").remove();
 
