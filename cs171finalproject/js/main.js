@@ -244,7 +244,7 @@ $("input[name='scatter-bursh']").on('click', function() {
 
 $("#page-radio > a").on('click', function(){
     var type = $(this).text();
-    if( type === 'Region' ){
+    if( type === 'Region/Income Group' ){
 
         $('.container[data-page="1"]').hide();
 

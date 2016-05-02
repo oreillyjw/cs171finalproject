@@ -177,9 +177,9 @@ li.key {
     background-color: #e7e7e7;
 }
 
-@media (min-width: 1325px){
+@media (min-width: 1280px){
     .container {
-        width: 1300px;
+        width: 1260px;
     }
 }
 

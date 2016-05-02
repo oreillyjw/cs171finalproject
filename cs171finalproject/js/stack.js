@@ -462,14 +462,23 @@ StackedArea.prototype.buildPaths = function() {
         .call(legendOrdinal);
 
     d3.select("#stack-chart")
-        .on("mousemove", function(){  
+        .on("mousemove", function() {
             mousex = d3.mouse(this);
             mousex = mousex[0] + 5;
-            vis.vertical.style("left", mousex + "px" )})
-        .on("mouseover", function(){  
+
+            if (mousex > vis.margin.left && mousex < (vis.width - vis.margin.left + 30) ) {
+                vis.vertical.style("left", mousex + "px");
+            }
+
+        })
+        .on("mouseover", function(){
             mousex = d3.mouse(this);
             mousex = mousex[0] + 5;
-            vis.vertical.style("left", mousex + "px")});
+
+            if (mousex > vis.margin.left && mousex < (vis.width - vis.margin.left + 30) ) {
+                vis.vertical.style("left", mousex + "px");
+            }
+        });
 
 
 };

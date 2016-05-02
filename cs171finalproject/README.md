@@ -12,9 +12,9 @@ Project Overview
 ### Features
 
 * Country 
-    * Filters
+    * Filters/Sorting
         * Years
-            * Only show one year data at a time
+            * Only show one year data at a time in scatterplot matrix and choropleth
             * 2000/2012
         * Info Types:
             * All Cause (DALY)
@@ -40,8 +40,42 @@ Project Overview
         * Search for a Country and then once you find an available country, choropleth will zoom on the country you selected, 
         Line Graph will change to the country you select, and scatter plot will highlight the country searched on
 * Region
-
----
+    * Filters/Sorting
+        * Year
+            * Only show one year data at a time in the stacked area and sankey
+            * 2000/2012   
+        * Datasets
+            * Region
+                * Based World Bank Regions
+                * World
+                * East Asia and Pacific
+                * Europe and Central Asia
+                * Latin America and Caribbean
+                * Middle East and North Africa
+                * South Asia
+                * Sub-Saharan Africa
+            * Income Group
+                * High income
+                * Upper middle income
+                * Lower middle income
+                * Low income
+        * Sex
+            * Both (Can only show all Ages groups) 
+            * Male
+            * Female
+        * Age Group:
+            * All ages (show for all sexes options)
+            * Various ranges from 0 months to 70+ years.
+        * Stack Stacked:
+            * Stack by Amount and by Percentage  
+        * Sort Sankey:
+            * Sort by Category or by Amount
+    * Graphs
+        * Stacked Area Graph
+            * While hovering over stack, more information will be shown to the right
+        * Sankey Graph
+            * see the data flows. And how it is connected
+---------------------------------------------------------
 ### Code Break Down
 
 * css
@@ -79,11 +113,11 @@ Project Overview
 * js
     * choropleth.js (Created by Jonathon)
         * Created to display the world map when the country tab is selected. 
-    * d3 ( Downloaded d3 libraries )
+    * d3 (Downloaded d3 libraries)
         * d3.geo.projection.v0.min.js
         * d3.js
         * d3.legend-color.js
-        * d3.legend.js
+        * d3.legend.js (modified to avoid conflict with legend-color)
         * d3.min.js
         * d3.sankey.js
         * d3.tip.js
@@ -106,4 +140,4 @@ Project Overview
         * topojson.js
     * sankey.js (Created by Lo/ Updated by Jonathon)
     * scatterplotmatrix.js (Created by Jonathon)
-    * stack.js (Created by Lo)
+    * stack.js (Created by Lo/ Updated by Jonathon)
