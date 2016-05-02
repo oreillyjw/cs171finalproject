@@ -1,10 +1,6 @@
 /*
-d3.select("#stack-type").on("change", function (d) {
-    stackType = d3.select("#stack-type").property("value");
-    updateVisualization();
-});*/
-
-
+  Setup all necessary variables for StackedArea Graph
+*/
 StackedArea = function(_parentElement){
     this.parentElement = _parentElement;
 
@@ -141,6 +137,9 @@ StackedArea = function(_parentElement){
     this.initVis();
 };
 
+/*
+  Initialize and setup all basic variables for graph
+*/
 StackedArea.prototype.initVis = function() {
 
     var vis = this;
@@ -217,6 +216,7 @@ StackedArea.prototype.initVis = function() {
     vis.gy = vis.svg.append("g")
         .attr("class", "axis y-axis");
 
+    // Setup tooltip to show more data
     vis.tooltip = d3.select("#stacked-div-info")
         .append("div")
         .attr("class", "info")
@@ -226,6 +226,7 @@ StackedArea.prototype.initVis = function() {
         .style("top", "150px")
         .style("left", vis.width-vis.margin.right+10 + "px");
 
+    // Setup vertical hairline
     vis.vertical = d3.select("#stack-chart")
         .append("div")
         .attr("class", "remove")
@@ -243,20 +244,25 @@ StackedArea.prototype.initVis = function() {
     vis.updateVis();
 };
 
+/*
+  Update visualization
+*/
 StackedArea.prototype.updateVis = function() {
 
     //console.log("in update vis", this);
 
     var vis = this;
-    
+    /*
+      Get all values to be defined
+    */
     vis.stackYear = d3.select("#region-year").property("value");
     vis.stackData = d3.select("#region-data").property("value");
     vis.stackSex = d3.select("#region-sex").property("value");
 
-
+    // fetch file that is to be displayed
     d3.json('data/DALY_2000_2012/'+vis.stackData, function(data) {
 
-    //cleaning data
+    //clean and normalize data
     var mainCat = vis.lv1[0];
     data.fact.forEach(function (d) {
 
@@ -325,7 +331,7 @@ StackedArea.prototype.updateVis = function() {
         }
 
     }
-    for (i = 0; i < females.length; i++) { 
+    for (i = 0; i < females.length; i++) {
         females[i].dims.FEMALE = females[i].Value;
         females[i].dims.MALE = males[i].Value;
         females[i].BOTH = females[i].dims.FEMALE + females[i].dims.MALE;
@@ -347,6 +353,7 @@ StackedArea.prototype.updateVis = function() {
     })
 };
 
+// build all paths for each line and areas
 StackedArea.prototype.buildPaths = function() {
 
     var vis = this;
@@ -369,13 +376,13 @@ StackedArea.prototype.buildPaths = function() {
         return (intNum + '').replace(/(\d)(?=(\d{3})+$)/g, '$1,');}
 
     var l = vis.svg.selectAll(".layer").data(layers);
-    
+
     l.enter().append("path")
         .attr("class", "layer")
         .attr("d", function(d) {
             //console.log(d);
             return vis.area(d.values); })
-        .style("fill",             
+        .style("fill",
             function(d) {
                 if (d.values[0].dims.CATEGORY == vis.lv1[0]) {
                     return vis.c1(d.values[0].dims.GHECAUSES);
@@ -403,15 +410,16 @@ StackedArea.prototype.buildPaths = function() {
             order = d3.bisect(range, mousex+50)-1;
             age = domain[order];
 
+            // render more information about region in tooltip section
             d3.select(this)
             .classed("hover", true)
             .attr("stroke", "black")
             .attr("stroke-width", "2px");
             vis.tooltip.html(
                 "<p><b>" + d.key + "</b><br>Age Group: " + age + "</p>" +
-                "<p>Cause DALY: " + addCommas(d.values[order].BOTH) + 
-                "<br>Female: " + addCommas(d.values[order].dims.FEMALE) + " (" + (d.values[order].dims.FEMALE/d.values[order].Value*100).toFixed(1) + "%)"+ 
-                "<br>Male: " + addCommas(d.values[order].dims.MALE) + " (" + (d.values[order].dims.MALE/d.values[order].Value*100).toFixed(1) + "%)"+ 
+                "<p>Cause DALY: " + addCommas(d.values[order].BOTH) +
+                "<br>Female: " + addCommas(d.values[order].dims.FEMALE) + " (" + (d.values[order].dims.FEMALE/d.values[order].Value*100).toFixed(1) + "%)"+
+                "<br>Male: " + addCommas(d.values[order].dims.MALE) + " (" + (d.values[order].dims.MALE/d.values[order].Value*100).toFixed(1) + "%)"+
 
                 "</p>"
             ).style("visibility", "visible");
@@ -434,7 +442,7 @@ StackedArea.prototype.buildPaths = function() {
         .style("opacity", 1.0)
         .attr("class", "layer")
         .attr("d", function(d) {return vis.area(d.values); })
-        .style("fill",             
+        .style("fill",
             function(d) {
                 if (d.values[0].dims.CATEGORY == vis.lv1[0]) {
                     return vis.c1(d.values[0].dims.GHECAUSES);
@@ -448,6 +456,7 @@ StackedArea.prototype.buildPaths = function() {
 
     l.exit().remove();
 
+    // setup legend for the graph
     vis.legend = vis.svg.append("g")
         .attr("class","legendOrdinal")
         .attr("transform", "translate(" + (vis.width-vis.margin.right*2) + "," + (vis.height*.9) + ")");
@@ -456,7 +465,7 @@ StackedArea.prototype.buildPaths = function() {
         .shape("path", d3.svg.symbol().type("square").size(150)())
         .shapePadding(1)
         .scale(vis.c0);
-    
+
     vis.svg.select(".legendOrdinal")
         .style("font-size","12px")
         .call(legendOrdinal);
@@ -483,7 +492,9 @@ StackedArea.prototype.buildPaths = function() {
 
 };
 
+// Setup Stacked Area
 var stackedArea = new StackedArea('stack-chart');
+// listen for changes to regions data
 $("#region-year").on("change", function (d) {stackedArea.updateVis();});
 $("#region-data").on("change", function (d) {stackedArea.updateVis();});
 $("#region-sex").on("change", function (d) {stackedArea.updateVis();});

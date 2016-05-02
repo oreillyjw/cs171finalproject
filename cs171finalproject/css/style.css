@@ -25,9 +25,9 @@ rect {
   fill: none;
   pointer-events: all;
 }
+
 #no-data-message{
     font-size: 20px;
-
 }
 
 .gauge-wrapper {

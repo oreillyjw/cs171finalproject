@@ -1,10 +1,14 @@
 /*
- http://bl.ocks.org/mbostock/3734336
- http://techslides.com/demos/d3/d3-world-map-mouse-click-zoom.html
- http://eyeseast.github.io/visible-data/2013/08/27/responsive-legends-with-d3/
- http://bl.ocks.org/linssen/7352810
+ Citations:
+    http://bl.ocks.org/mbostock/3734336
+    http://techslides.com/demos/d3/d3-world-map-mouse-click-zoom.html
+    http://eyeseast.github.io/visible-data/2013/08/27/responsive-legends-with-d3/
+    http://bl.ocks.org/linssen/7352810
  */
 
+/*
+New Object Creation
+*/
 ChoroplethMap = function(_parentElement, _worldData, __worldNames, _dalysInfo, _dalysHash) {
 
   this.parentElement = _parentElement;
@@ -16,6 +20,9 @@ ChoroplethMap = function(_parentElement, _worldData, __worldNames, _dalysInfo, _
   this.initVis();
 };
 
+/*
+ Initialize the basis Map
+*/
 ChoroplethMap.prototype.initVis = function() {
 
   var vis = this;
@@ -34,7 +41,7 @@ ChoroplethMap.prototype.initVis = function() {
   vis.legendSize = 60;
   vis.excludeColor = "gray";
 
-
+  // Setup color schema
   vis.colors = d3.scale.quantize()
           .range(colorbrewer.RdPu[8]);
 
@@ -70,7 +77,12 @@ ChoroplethMap.prototype.initVis = function() {
 
   var tip = d3.tip().attr('class', 'd3-tip').html(function(d){
     //tooltip-title
-    return "<div class='tooltip-title' >"+d.name+"</div>";
+      if (vis.dalysHash[d.name]){
+          return "<div class='tooltip-title' >"+d.name+"<br><b>"+dalysMappingTitles[vis.type]+": </b>"
+              +formatNumber(formatNumberWhole(vis.dalysHash[d.name][vis.year][vis.type]))+"</div>";
+      }else{
+          return "<div class='tooltip-title' >"+d.name+"</div>";
+      }
   });
   /* Invoke the tip in the context of your visualization */
   vis.svg.call(tip);
@@ -81,11 +93,11 @@ ChoroplethMap.prototype.initVis = function() {
       n = countries.length;
 
   countries.forEach(function(d) {
-    var tryit = vis.worldNames.filter(function(n) { return d.id == n.id; })[0];
-    if (typeof tryit === "undefined"){
+    var thisCountry = vis.worldNames.filter(function(n) { return d.id == n.id; })[0];
+    if (typeof thisCountry === "undefined"){
       d.name = "Unknown";
     } else {
-      d.name = tryit.name;
+      d.name = thisCountry.name;
     }
   });
 
@@ -96,9 +108,10 @@ ChoroplethMap.prototype.initVis = function() {
       .append("path")
       .attr("class", "country")
       .attr("d", vis.path)
-      .attr("fill", vis.excludeColor)
+      .attr("fill", vis.excludeColor) // Set default color
       .on("click", vis.click)
       .attr('class', function(d){
+        // Create standard classes to easily find country
         return "countries " + d.name.replace(/[^a-z]/gi, '').toLowerCase();
       });
 
@@ -110,18 +123,23 @@ ChoroplethMap.prototype.initVis = function() {
   vis.wrangleData();
 };
 
-
+/*
+ Wrangle and reparse the data to get what is needed.
+*/
 ChoroplethMap.prototype.wrangleData = function() {
   var vis = this;
 
   vis.displayData = vis.dalysInfo.filter(function(value){
-      return value.Year === vis.year && activeCountries.indexOf(value.Country) === -1;
+      return value.Year === vis.year // Check year of the vis
+      && activeCountries.indexOf(value.Country) === -1; // Check to see what countries should be dynamically excluded
   });
 
   vis.updateVis();
 };
 
-
+/*
+  Updated the visualization of the map
+*/
 ChoroplethMap.prototype.updateVis = function() {
   var vis = this;
 
@@ -132,11 +150,12 @@ ChoroplethMap.prototype.updateVis = function() {
   if( vis.type === 'lifeexpectancy'){
     vis.colors.domain(extent);
   }else{
-    vis.colors.domain([Math.floor(extent[0]/1000)*1000,Math.ceil(extent[1]/1000)*1000]);
+    vis.colors.domain([Math.floor(extent[0]/1000)*1000,Math.ceil(extent[1]/1000)*1000]); // round the numbers
   }
 
   var countries = vis.svg.selectAll("path.countries");
 
+  //Setup what color each country should be
   countries
       .transition()
       .duration(1000)
@@ -151,11 +170,13 @@ ChoroplethMap.prototype.updateVis = function() {
           return vis.excludeColor;
         }
       });
+  // Remove old legend
   $('#legend > .list-inline').remove();
   var legend = d3.select('#legend')
       .append('ul')
       .attr('class', 'list-inline');
 
+  // setup new legend
   var keys = legend.selectAll('li.key')
       .data(vis.colors.range());
 
@@ -170,7 +191,10 @@ ChoroplethMap.prototype.updateVis = function() {
       });
 };
 
-
+/*
+  When a country is clicked on zoom into that country.
+  And trigger and update all other views
+*/
 ChoroplethMap.prototype.click = function(d) {
 
   var countrySelected = this;
@@ -185,14 +209,17 @@ ChoroplethMap.prototype.click = function(d) {
       }
 
       $('#no-data-message').hide();
+      // Dispaly correct country in the lineGraph
       lineGraph.country = d.name;
       $('.linetype').remove();
       lineGraph.wrangleData();
 
+      // Reset the Scatter plot Matrix
       if(scatterMatrix.brushEnabled ){
           scatterMatrix.brush.clear();
       }
 
+      // highlight the selected Country and set hidden or fade out the none selected country
       scatterMatrix.svg.selectAll("circle").classed("hidden",function(k){
           return k.Country !== d.name;
       });
@@ -202,6 +229,7 @@ ChoroplethMap.prototype.click = function(d) {
       });
 
   }else{
+      // Country does not have
       $(".missing-country").text(d.name);
       if(lineGraphType === "Graph" ){
           $('#subGraph-line, #dalys-linegraph-radio').hide();
@@ -212,6 +240,7 @@ ChoroplethMap.prototype.click = function(d) {
   }
 
 
+   // Zoom into country
   choroplethMap.g.selectAll(".active").classed("active", false);
   d3.select(countrySelected).classed("active", choroplethMap.active = d);
 
@@ -229,6 +258,7 @@ ChoroplethMap.prototype.click = function(d) {
       + "translate(" + translate + ")");
 };
 
+// Reset the choropleth zooming and unselect scatter plot matrix
 ChoroplethMap.prototype.reset = function() {
     choroplethMap.g.selectAll(".active").classed("active", choroplethMap.active = false);
     choroplethMap.g.transition().duration(750).attr("transform", "");

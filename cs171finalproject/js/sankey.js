@@ -67,7 +67,7 @@ var link = sankey_svg_1.append("g")
     .selectAll(".link");
 //Female -145
 loadData();
-
+// load data for sankey
 function loadData() {
     sankeyYear = d3.select("#region-year").property("value");
     sankeyData = d3.select("#region-data").property("value");
@@ -83,7 +83,7 @@ function loadData() {
         sankeyLookup = lookup;
     });
 
-
+    // load data for appropriate data set
     d3.json("data/DALY_2000_2012/"+sankeyData, function(error, data) {
 
         data.fact.forEach(function (d) {

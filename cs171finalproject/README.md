@@ -1,6 +1,5 @@
-Project Overview
+#Disability-Adjusted Life Year (DALY)
 
----
 ### Project Website
 * http://oreillyjw.github.io/cs171finalproject/
 

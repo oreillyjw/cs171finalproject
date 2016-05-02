@@ -1,8 +1,12 @@
 /*
- http://bl.ocks.org/ZJONSSON/3918369
- https://github.com/jay3dec/MultiLineChart_D3
+ Citations:
+    http://bl.ocks.org/ZJONSSON/3918369
+    https://github.com/jay3dec/MultiLineChart_D3
  */
 
+/*
+  Setup Line Graph
+*/
 LineGraph = function(_parentElement, _worldData, __worldNames, _dalysInfo, _dalysHash, _regionDalysInfo, _regionsDalysHash, _lifeExpectancy ) {
 
     this.parentElement = _parentElement;
@@ -13,12 +17,14 @@ LineGraph = function(_parentElement, _worldData, __worldNames, _dalysInfo, _daly
     this.regionDalysInfo = _regionDalysInfo;
     this.regionsDalysHash = _regionsDalysHash;
     this.lifeExpectancy = _lifeExpectancy;
-    this.country = "World";
+    this.country = "World"; // set inital country to World
 
     this.initVis();
 };
 
-
+/*
+  Set inital state of viz
+*/
 LineGraph.prototype.initVis = function() {
     var vis = this;
 
@@ -65,7 +71,7 @@ LineGraph.prototype.initVis = function() {
         .attr("class", "y-axis axis-title")
         .style("text-anchor", "end");
 
-
+    //Set up two different line because we have two different axis.
     vis.line = d3.svg.line()
         .x( function(d){ return vis.x(d.DateYear);})
         .y(function(d){ return vis.y(d.Dalys);})
@@ -78,6 +84,8 @@ LineGraph.prototype.initVis = function() {
     vis.wrangleData();
 };
 
+// filter the data and possibly look into the region if it the
+// country we are looking for is not in the country data
 LineGraph.prototype.wrangleData = function() {
     var vis = this;
 
@@ -108,12 +116,14 @@ LineGraph.prototype.updateVis = function() {
         .style("font-size","14px")
         .text(vis.country);
 
+// Setup basic color domain
     color.domain(
         d3.keys(vis.displayData[0])
             .filter(function(key) {
                 return vis.allDalysDisplay.indexOf(key) !== -1; })
     );
 
+    // map colors and data together
     var dalys = color.domain().map(function(dalyType) {
         return {
             dalyType : dalyType,
@@ -123,7 +133,7 @@ LineGraph.prototype.updateVis = function() {
         };
     });
 
-
+    // Seperate Life Expectancy into its own y axis
     var y1Dalys = dalys.filter(function(key){
         return key.dalyType !== 'Life Expectancy';
     });
@@ -170,6 +180,7 @@ LineGraph.prototype.updateVis = function() {
         });
     });
 
+    // make sure Life expectancy is in data set otherwise ignore 2nd yaxis
     if ( vis.allDalysDisplay.indexOf('Life Expectancy') > -1){
         vis.svg.append("g")
             .attr("class", "y-axis2 axis age")
@@ -202,12 +213,14 @@ LineGraph.prototype.updateVis = function() {
         vis.displaySecondAxis = false;
     }
 
+    // call draw circles function
     vis.drawCircles();
     // Loop through each symbol / key
     var daly = vis.svg.selectAll(".line")
         .data(y1Dalys)
         .attr("class", "line");
 
+    // add all lines to the Graph for the DALYs axis
     daly.enter()
         .append("path")
         .attr("class", "line")
@@ -227,7 +240,7 @@ LineGraph.prototype.updateVis = function() {
             $("." + dalysMappingTitles[d.dalyType] ).attr("class", "linetype "+ dalysMappingTitles[d.dalyType]);
         });
 
-
+    // if we have a second axis then draw corresponding data
     if( vis.displaySecondAxis){
         var daly2 = vis.svg.selectAll(".line")
             .data(y2Dalys)
@@ -252,11 +265,13 @@ LineGraph.prototype.updateVis = function() {
     }
 
     vis.drawLegend();
+    // Render secondary table
     vis.renderTable();
 
 
 };
 
+// Add circles to the graph
 LineGraph.prototype.drawCircles = function() {
     var vis = this;
 
@@ -297,6 +312,7 @@ LineGraph.prototype.drawCircles = function() {
     circles.exit().remove();
 };
 
+// Draw corresponding legend to the graph
 LineGraph.prototype.drawLegend = function() {
     var vis = this;
 
@@ -305,7 +321,7 @@ LineGraph.prototype.drawLegend = function() {
         .attr("class","legend")
         .attr("transform","translate(62.5,366)")
         .style("font-size","12px")
-        .call(d3.legendthis);
+        .call(d3.legendthis); // had to change name to avoid naming conflicts
 
     legendthis
         .style("font-size","15px")
@@ -314,6 +330,7 @@ LineGraph.prototype.drawLegend = function() {
         .attr("x",0);
 };
 
+// Add data to the graph for all active categories
 LineGraph.prototype.renderTable = function(){
     var vis = this;
 
@@ -331,4 +348,3 @@ LineGraph.prototype.renderTable = function(){
         }
     });
 };
-

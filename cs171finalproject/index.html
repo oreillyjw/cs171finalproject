@@ -4,15 +4,13 @@
 	<meta charset="utf-8">
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>DALY's</title>
+	<title>Disability-Adjusted Life Year (DALY)</title>
 
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/font-awesome.min.css">
 	<link rel="stylesheet" href="css/colorbrewer.css">
 	<link rel="stylesheet" href="css/fastselect.min.css">
 	<link rel="stylesheet" href="css/jquery-ui.css">
-
-
 	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -30,6 +28,7 @@
 		<div id="navbar" class="navbar-collapse collapse">
 			<ul class="nav navbar-nav navbar-right">
 				<li>
+					<!--  Launches the intro to learn more about DALYs-->
 					<a type="button" data-toggle="modal" data-target="#infoModal">About DALYs</a>
 				</li>
 			</ul>
@@ -37,6 +36,8 @@
 	</div>
 </nav>
 <br/>
+<!--  Static toggle that shows up on all pages -->
+
 <div class="container" data-page="0">
 	<div class="row">
 		<div class="col-lg-12 col-md-12 col-xs-12">
@@ -52,6 +53,8 @@
 </div>
 
 <!-- Main Container -->
+<!--  Page 1 of the entire website -->
+
 <div class="container" data-page="1" >
 	<div class="row">
 		<div class="col-lg-4 col-md-4 col-xs-4" style="padding-left: 0;">
@@ -181,7 +184,7 @@
 	</div>
 </div>
 
-
+<!--  Page 2 of the entire website -->
 <div class="container" data-page="2" style="display: none;">
 	<div class="row">
 		<div class="col-lg-10 col-md-10 col-xs-12" style="padding-right: 0;">
@@ -275,6 +278,7 @@
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				<h4 class="modal-title">About Disability-Adjusted Life Years (DALY)</h4>
 			</div>
+			<!--  Page 1 -->
 			<div class="modal-body active modal-1">
 				<div class="modal-content-para">
 					As the years tick by, the majority of people find themselves affected by disability, disease, or injury.
@@ -290,6 +294,7 @@
 					debilitating. This is a part of DALY, but it is not counted in the calculation.
 				</div>
 			</div>
+			<!--  Page 2 -->
 			<div class="modal-body modal-2" style="display: none">
 				<div class="modal-content-para">
 					After disability or disease take their toll, the next phase of life is considered,
@@ -299,6 +304,7 @@
 					changes not only the day-to-day, but can change their life expectancy.
 				</div>
 			</div>
+			<!--  Page 3 -->
 			<div class="modal-body modal-3" style="display: none">
 				<div class="modal-content-para">
 					The final piece of the DALY metric is “years of life lost” (YLL). Early death is an unfortunate
@@ -310,6 +316,7 @@
 					Click the Close button to learn more about DALYs.
 				</div>
 			</div>
+			<!--  display below is carried through all pages -->
 			<div class="modal-body">
 				<div class="gauge-wrapper">
 					<div class="gauge1">
@@ -336,12 +343,11 @@
 				<button type="button" class="btn btn-default btn-prev">Previous</button>
 				<button type="button" class="btn btn-primary btn-next">Next</button>
 				<button type="button" data-dismiss="modal" class="btn btn-dismiss" style="float: right">Close</button>
-
 			</div>
 		</div>
 	</div>
 </div>
-
+<!--  All filters for the country page -->
 <div id="filterModal" class="modal fade">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -373,6 +379,7 @@
 						<label><input type="radio" name="dalysType" value="lifeexpectancy"><div class="typeText">Life Expectancy</div></label>
 					</div>
 				</div><!-- /input-group -->
+				<!--  List of all countries that can be filtered out of data. -->
 				<div class="filter-countries">
 					<h5>Remove Country/Countries</h5>
 					<!-- common countries to filter: 'Eritrea','Sierra Leone', 'Syrian Arab Republic'-->
@@ -567,6 +574,7 @@
 
 
 <br><br>
+
 <footer>
 	<div class="container">
 		<div row="row">

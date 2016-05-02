@@ -1,8 +1,12 @@
 /*
- https://bl.ocks.org/mbostock/4063663
- http://bl.ocks.org/d3noob/a22c42db65eb00d4e369
+ Citations:
+    https://bl.ocks.org/mbostock/4063663
+    http://bl.ocks.org/d3noob/a22c42db65eb00d4e369
 */
 
+/*
+  Initialize the Scatter Plot Matrix
+*/
 ScatterMatrix = function(_parentElement, _countryDalysInfo, _countryDalysHash, _regionDalysInfo, _regionsDalysHash, _lifeExpectancy ) {
 
     this.parentElement = _parentElement;
@@ -15,6 +19,10 @@ ScatterMatrix = function(_parentElement, _countryDalysInfo, _countryDalysHash, _
     this.initVis();
 };
 
+
+/*
+  Setup initial sets for scatter plot
+*/
 ScatterMatrix.prototype.initVis = function() {
 
     var vis = this;
@@ -31,13 +39,14 @@ ScatterMatrix.prototype.initVis = function() {
 
     vis.year = $("#dalys-year-radio > a.active").text();
 
-    vis.columnsToDisplay  = [ 'Country', 'Europe and Central Asia','High Income'];
-    // 'Latin America and Caribbean','Middle East and North Africa', 'South Asia', 'Sub-Saharan Africa', 'World']
+    // list of what will be shown in the matrix
     vis.infoToDisplay = ['Noncommunicable diseases','Injuries','All Causes','Communicable & other Group I'
         , 'Life Expectancy'
         ,'Total expenditure on health as a percentage of gross domestic product'
         //, 'DateYear'
     ];
+
+    // Mapping for data to be displayed and for labels
     vis.axisLabels = {
         'Total expenditure on health as a percentage of gross domestic product' : 'Health Expenditure ²',
         'Life Expectancy' : 'Life Expectancy',
@@ -51,6 +60,8 @@ ScatterMatrix.prototype.initVis = function() {
     vis.width = 1000;
     vis.size = 125;
 
+
+    // setup time axis different from numeric x axis, used if Year is used as a field
     vis.xtime = d3.time.scale()
         .range([vis.padding / 2, vis.size - vis.padding / 2]);
 
@@ -83,14 +94,16 @@ ScatterMatrix.prototype.initVis = function() {
         .orient("left")
         .ticks(5);
 
-
-
     vis.wrangleData();
 };
 
+/*
+  Setup the data to be used in the scatter plot
+*/
 ScatterMatrix.prototype.wrangleData = function() {
     var vis = this;
 
+    // Initalize burshing only if brish is enabled, disabled by default
     if ( vis.brushEnabled ){
         vis.brush = d3.svg.brush()
             .x(vis.x)
@@ -114,6 +127,7 @@ ScatterMatrix.prototype.wrangleData = function() {
 
     });
 
+    // we need a few different data structures for this viz, setup here.
     vis.displayData = {};
     vis.displayDataHash.forEach(function(d){
             for(var key in d) {
@@ -132,14 +146,15 @@ ScatterMatrix.prototype.wrangleData = function() {
 };
 
 
-
+/*
+  Update the scatterplot matrix viz 
+*/
 ScatterMatrix.prototype.updateVis = function() {
     var vis = this;
 
     vis.n = vis.infoToDisplay.length;
 
     vis.displayValuesX = d3.extent(vis.displayDataHash, function(d) {return d.DateYear; });
-
 
     vis.xAxis
         .tickSize(vis.size * vis.n);
@@ -156,6 +171,7 @@ ScatterMatrix.prototype.updateVis = function() {
         .tickFormat(d3.time.format("%Y"))
         .tickValues(vis.displayValuesX);
 
+    // setup svg
     vis.svg = d3.select("#" + vis.parentElement).append("svg")
         .attr("width", vis.size * vis.n + vis.padding + 10 + vis.margin.left)
         .attr("height", vis.size * vis.n + vis.margin.bottom)
@@ -163,6 +179,7 @@ ScatterMatrix.prototype.updateVis = function() {
         .attr("transform", "translate(" + vis.margin.left + "," + vis.padding / 2 + ")");
 
 
+    // setup each x axis for all quadrants
     vis.svg.selectAll(".x.axis")
         .data(vis.infoToDisplay)
         .enter().append("g")
@@ -196,6 +213,7 @@ ScatterMatrix.prototype.updateVis = function() {
         .style("font-size", "12px");
 
 
+    // setup each y axis for all quadrants
     vis.svg.selectAll(".y.axis")
         .data(vis.infoToDisplay)
         .enter().append("g")
@@ -221,10 +239,12 @@ ScatterMatrix.prototype.updateVis = function() {
         .style("font-size", "12px");
 
 
+    // add tooltip
     vis.tooltip = d3.select("body").append("div")
         .attr("class", "tooltip")
         .style("opacity", 0);
 
+    // setup each cell/quadrant
     vis.cell = vis.svg.selectAll(".cell")
         .data(vis.cross(vis.infoToDisplay, vis.infoToDisplay))
         .enter().append("g")
@@ -235,11 +255,11 @@ ScatterMatrix.prototype.updateVis = function() {
         .each(function(p){ return vis.plot(this,p); });
 
     //// Titles for the diagonal.
-    vis.cell.filter(function(d) {
-        return d.i === 0 || d.j === 0; }).append("text")
-        .attr("x", vis.padding)
-        .attr("y", vis.padding)
-        .attr("dy", ".71em");
+    // vis.cell.filter(function(d) {
+    //     return d.i === 0 || d.j === 0; }).append("text")
+    //     .attr("x", vis.padding)
+    //     .attr("y", vis.padding)
+    //     .attr("dy", ".71em");
 
     if ( vis.brushEnabled ){
         vis.cell.call(vis.brush);
@@ -248,6 +268,9 @@ ScatterMatrix.prototype.updateVis = function() {
 
 };
 
+/*
+  Draw the plot for each quadrant
+*/
 ScatterMatrix.prototype.plot = function(that, p) {
 
     var cell = d3.select(that),
@@ -265,7 +288,6 @@ ScatterMatrix.prototype.plot = function(that, p) {
         vis.y.domain(d3.extent(vis.displayData[p.y]));
     }
 
-
     cell.append("rect")
         .attr("class", "frame")
         .attr("x", vis.padding / 2)
@@ -273,6 +295,7 @@ ScatterMatrix.prototype.plot = function(that, p) {
         .attr("width", vis.size - vis.padding)
         .attr("height", vis.size - vis.padding);
 
+    // add each point to the quadrant
     cell.selectAll("circle")
         .data(vis.displayDataHash)
         .enter().append("circle")
@@ -333,6 +356,9 @@ ScatterMatrix.prototype.plot = function(that, p) {
 
 };
 
+/*
+  Setup how to cross the project data
+*/
 ScatterMatrix.prototype.cross = function(a, b) {
     var vis = this;
     var c = [], n = a.length, m = b.length, i, j;
@@ -340,6 +366,9 @@ ScatterMatrix.prototype.cross = function(a, b) {
     return c;
 };
 
+/*
+  Setup the brush start function
+*/
 ScatterMatrix.prototype.brushstart = function(p) {
     var vis = this;
 
@@ -379,9 +408,11 @@ ScatterMatrix.prototype.brushend = function(vis) {
     if (vis.brush.empty()) vis.svg.selectAll(".hidden").classed("hidden", false);
 };
 
+// clear any selection, and any current brush
 ScatterMatrix.prototype.resetSelection = function(){
     var vis = this;
     vis.svg.selectAll(".hidden").classed("hidden", false);
+
     if ( vis.brush ){
         vis.brush.clear();
     }

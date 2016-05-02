@@ -1,8 +1,11 @@
 /*
- http://www.htmlgoodies.com/beyond/javascript/article.php/3471341
- http://jqueryui.com/autocomplete/
- http://dbrekalo.github.io/fastselect/
+ Citations:
+    http://www.htmlgoodies.com/beyond/javascript/article.php/3471341
+    http://jqueryui.com/autocomplete/
+    http://dbrekalo.github.io/fastselect/
  */
+
+ //Setup global variables
 var choroplethMap,
     lineGraph,
     scatterMatrix,
@@ -14,7 +17,8 @@ var choroplethMap,
     regionDalysHash = {},
     lifeExpecancyHash = {},
     activeCountries = [],
-    activeCategories =  [ 'All Causes', 'Communicable & other Group I', 'Injuries', 'Noncommunicable diseases',  'Life Expectancy'],
+    activeCategories =  [ 'All Causes', 'Communicable & other Group I', 'Injuries',
+    'Noncommunicable diseases',  'Life Expectancy'],
     healthDataHash = {},
     lineGraphType = 'Graph',
     dalysMappingTitles = {
@@ -50,17 +54,20 @@ var choroplethMap,
 
 
     },
-
     color = d3.scale.category10(),
     formatDate = d3.time.format("%Y"),
     formatNumber = d3.format("0,000"),
     formatNumberWhole = d3.format(".0f");
 
+//show boostrap modal immediately
 $("#infoModal").modal('show');
+// setup multi select fast select jquery plugin
 $('.multipleSelect').fastselect();
+// Load data
 loadData();
 
 function loadData(){
+  // load all files for the country page
     queue()
         .defer(d3.json, "data/world-110m.json")
         .defer(d3.tsv, "data/world-country-names.tsv")
@@ -76,6 +83,7 @@ function loadData(){
                 countryDalys = countryCsv;
                 regionDalys = regionCsv;
 
+                // setup all variables and transform integers
                 lifeExpectancyCsv.forEach(function(d){
                     if (lifeExpecancyHash[d.Country] === undefined) {
                         lifeExpecancyHash[d.Country] = {};
@@ -167,16 +175,21 @@ function loadData(){
             }
         });
 }
+
+/*
+ call and create all country visualizations
+*/
 function createVis(){
     choroplethMap = new ChoroplethMap("map", worldData, worldNames, countryDalys, countryDalysHash);
     lineGraph = new LineGraph("subGraph-line", worldData, worldNames, countryDalys, countryDalysHash, regionDalys, regionDalysHash, lifeExpecancyHash);
     scatterMatrix = new ScatterMatrix("scatter-matrix", countryDalys, countryDalysHash, regionDalys, regionDalysHash, lifeExpecancyHash);
-
 }
 
+// Set inital filter values
 $(".daly-year").html("<b>Year</b>: " + $("#dalys-year-radio > a.active").text());
 $(".daly-type").html("<b>DALY Type</b>: " + dalysMappingTitles[$("input:radio[name='dalysType']:checked").val()]);
 
+// Update filter values and update appropriate graphs
 $("input[name='dalysType']").on('click', function(){
     var val = $(this).val();
     if( choroplethMap.type !== val){
@@ -197,7 +210,9 @@ $("input[name='dalysType']").on('click', function(){
     }
 });
 
-
+// When the apply button is clicked for the filters
+// add all countries that we wish to not display to the array
+// and then update the vizualizations
 $('button[name="apply-dalys"]').on('click',function(){
     activeCountries = [];
     $('.fstChoiceItem').each(function(i,d){
@@ -209,7 +224,7 @@ $('button[name="apply-dalys"]').on('click',function(){
     choroplethMap.wrangleData();
 });
 
-
+// Update the year that is displayed
 $("#dalys-year-radio > a ").on('click', function(){
     var year = $(this).text();
     if( choroplethMap.year !== year) {
@@ -222,6 +237,7 @@ $("#dalys-year-radio > a ").on('click', function(){
     }
 });
 
+// Toggle the Line Graph and the Table
 $("#dalys-linegraph-radio > a").on('click', function(){
     var type = $(this).text();
 
@@ -229,19 +245,21 @@ $("#dalys-linegraph-radio > a").on('click', function(){
     if ( type === "Graph" ){
         $('#subGraph-table').hide();
         $('#subGraph-line, #dalys-linegraph-radio').show();
+        lineGraph.wrangleData();
     }else{
         $('#subGraph-line').hide();
         $('#subGraph-table, #dalys-linegraph-radio').show();
     }
 });
 
+// update the scatter plot matrix
 $("input[name='scatter-bursh']").on('click', function() {
     $('#scatter-matrix > svg').remove();
     scatterMatrix.brushEnabled = $(this).is(":checked");
     scatterMatrix.wrangleData();
 });
 
-
+// Toggle pages
 $("#page-radio > a").on('click', function(){
     var type = $(this).text();
     if( type === 'Region/Income Group' ){
@@ -286,7 +304,7 @@ $('.modal-footer > .btn').on('click', function(){
         $('.modal-body.active').removeClass('active').hide();
         $('.modal-body.modal-'+ currentNum).addClass('active').show();
     }
-
+    // update the semi-circle visualization
     changeCircle(currentNum);
 });
 
@@ -294,6 +312,8 @@ $('.modal-footer > .btn').on('click', function(){
 /*
  modified from http://codepen.io/vistar/pen/JdVzor
  */
+
+// Draws the appropriate arc for the visualization
 var changeCircle = function(stage){
 
     var deg = -88,
@@ -333,14 +353,15 @@ var changeCircle = function(stage){
         .css('-ms-transform', 'rotate(' + deg   +'deg)');
 
 };
-
+// Set default circle points
 changeCircle(1);
 
-
+// Call the reset function created in the chorolpeth object
 $('.reset-button > .btn.btn-danger').on('click', function(){
     choroplethMap.reset()
 });
 
+// Initalize the search country functionality
 $(function() {
     var availableTags = [
         "Afghanistan",
@@ -521,6 +542,8 @@ $(function() {
     });
 });
 
+// When the search form is submitted or the search icon is clicked. Attempt to search the graph
+// Trigger a click on the country which will trigger same functionality to zoom in and other features
 $( "#country-search-box" ).submit(function( event ) {
     event.preventDefault();
     var country = $('#country').val().replace(/[^a-z]/gi, '').toLowerCase();
@@ -532,9 +555,15 @@ $( "#country-search-box" ).submit(function( event ) {
     }
 });
 
+
 $('.fa.fa-search').on('click', function(){
     var country = $('#country').val().replace(/[^a-z]/gi, '').toLowerCase();
-    $('#map .'+country).d3Click();
+    if ( $('#map .'+country).val() !== undefined ){
+        $('.search-country-not-found').hide();
+        $('#map .'+country).d3Click();
+    }else{
+        $('.search-country-not-found').show();
+    }
 });
 
 /*
@@ -547,17 +576,16 @@ jQuery.fn.d3Click = function () {
     });
 };
 
+// Reset all filters and reload data
 $('.reset-filters-country').on('click', function(){
     $("input[name='dalysType'][value='all']").prop("checked", true).click();
     $('.fstChoiceRemove').each(function(i,d){
         $(d).click();
     });
-    $('button[name="apply-dalys"]').click();
+    $('button[name="apply-dalys"]').click(); // Click apply button to trigger desired affect
     $('div.reset-button > button').click();
     lineGraph.country = "World";
     $('.linetype').remove();
     lineGraph.wrangleData();
 
 });
-
-
