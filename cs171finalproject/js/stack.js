@@ -217,10 +217,10 @@ StackedArea.prototype.initVis = function() {
     vis.gy = vis.svg.append("g")
         .attr("class", "axis y-axis");
 
-    vis.tooltip = d3.select("#stack-chart")
+    vis.tooltip = d3.select("#stacked-div-info")
         .append("div")
-        .attr("class", "remove")
-        .style("position", "absolute")
+        .attr("class", "info")
+        //.style("position", "absolute")
         .style("z-index", "20")
         .style("visibility", "hidden")
         .style("top", "150px")
