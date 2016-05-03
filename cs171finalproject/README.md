@@ -74,7 +74,9 @@
         * Stacked Area Graph
             * While hovering over stack, more information will be shown to the right
         * Sankey Graph
-            * see the data flows. And how it is connected
+            * See the data flows. And how it is connected
+ 
+
 ---------------------------------------------------------
 ### Code Break Down
 
@@ -110,6 +112,7 @@
           * World by Cause.xml
 * fonts
 * img
+   *  Process Book PDF
 * js
     * choropleth.js (Created by Jonathon)
         * Created to display the world map when the country tab is selected. 
