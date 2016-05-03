@@ -6,6 +6,7 @@
 ---
 ### Screencast
 * https://www.youtube.com/watch?v=H6qm4MrxwDo
+* Screen Cast Powerpoint: https://drive.google.com/file/d/0B-ueuc4hhp0tMVdVdDBtT1QtSEU/view?usp=sharing
 
 ---
 ### Features
